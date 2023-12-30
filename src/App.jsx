@@ -1,14 +1,22 @@
 import { useState } from "react";
 import Navbar from "./components/navbar/navbar";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./components/home/home";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <div className="bg-[#252836] w-screen h-screen">
+        <main className="flex bg-[#252836]">
           <Navbar />
-        </div>
+          <Routes>
+            <Route path="/" element={ <Home /> } />
+            <Route
+              path="/dashboard"
+              element={<h1 className="grow">Dashboard</h1>}
+            />
+          </Routes>
+        </main>
       </BrowserRouter>
     </>
   );
