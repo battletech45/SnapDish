@@ -11,7 +11,7 @@ const OrderCheckout = ({discount, total}) => {
             <p className="font-barlow text-base text-[#ABBBC2] font-normal leading-5">Sub total</p>
             <p className="font-barlow text-base font-medium leading-6 text-white">$ {total}</p>
         </div>
-        <div className="flex items-center justify-center p-4 w-full rounded-2xl bg-[#EA7C69]">
+        <div className="flex items-center justify-center p-4 w-full rounded-2xl bg-[#EA7C69] cursor-pointer">
             <p className="font-barlow text-xl font-semibold leading-5 text-white">Continue to Payment</p>
         </div>
     </div>
