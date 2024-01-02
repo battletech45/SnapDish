@@ -5,7 +5,6 @@ const NavbarItem = ({ item }) => {
 
   const Icon = item.icon;
   let location = useLocation();
-  console.log(location);
   const handleClick = () => {
     if (item.name === "Logout") return;
     setSelected(item.index);

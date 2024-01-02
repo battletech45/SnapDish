@@ -6,7 +6,6 @@ const SearchBar = () => {
     <div className="flex items-center bg-[#2D303E] border border-[#393C49] p-3 rounded-lg w-56">
       <div className="mr-2 text-gray-500">
         <Search color='white' size={15}/>
-        <i className="fas fa-search"></i>
       </div>
       <input
         type="text"

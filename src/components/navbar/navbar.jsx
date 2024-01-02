@@ -7,7 +7,7 @@ import { navbarLinks } from "./navbarLinks";
 const Navbar = () => {
 
   return (
-    <div className="bg-[#1F1D2B] h-screen w-20 md:w-24 items-center justify-between flex flex-col py-4 rounded-r-2xl">
+    <div className="bg-[#1F1D2B] h-screen w-20 md:w-24 items-center justify-between flex flex-col py-4 rounded-r-2xl fixed left-0">
       <NavbarTitle photo={logo} /> 
       {navbarLinks.map((item) => (
         <NavbarItem
