@@ -1,4 +1,4 @@
-export const dummyData = [
+export const orderItems = [
     {
         title: "Spicy seasoned seafood noodles",
         photoURL: "https://www.themealdb.com/images/media/meals/020z181619788503.jpg",
@@ -90,17 +90,3 @@ export const dummyData = [
         quantity: 20
     },
 ];
-
-
-
-
-
-
-
-
-
-
-
-
-
-

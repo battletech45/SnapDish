@@ -1,28 +1,19 @@
 import React from "react";
 import OrderListHeader from "./orderListHeader";
 import OrderItem from "./orderItem";
+import { orderItems } from "./orderItems";
 
 const OrderList = () => {
-
   return (
-    <div>
+    <div className="flex flex-col grow relative overflow-y-scroll">
       <OrderListHeader />
-      <OrderItem
-        photoURL={
-          "https://www.themealdb.com/images/media/meals/020z181619788503.jpg"
-        }
-        title={"Spicy seasoned seafood noodles"}
-        price={2.29}
-        quantity={20}
-      />
-      <OrderItem
-        photoURL={
-          "https://www.themealdb.com/images/media/meals/020z181619788503.jpg"
-        }
-        title={"Spicy seasoned seafood noodles"}
-        price={2.29}
-        quantity={20}
-      />
+      <div className="mt-10">
+      {
+        orderItems.map((item) => (
+          <OrderItem item={item}/>
+        ))
+      }
+      </div>
     </div>
   );
 };

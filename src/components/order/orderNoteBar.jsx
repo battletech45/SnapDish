@@ -9,11 +9,11 @@ const OrderNoteBar = () => {
   };
 
   return (
-    <div className="my-4 flex items-center justify-between gap-6">
+    <div className="my-4 flex items-center justify-between gap-4">
       <input
         type="text"
         placeholder="Order Note..."
-        className="flex p-7 items-start gap-2 border text-white border-[#393C49] bg-[#2D303E] rounded-xl h-12 w-[27.5rem]"
+        className="flex p-7 items-start gap-2 border text-white border-[#393C49] bg-[#2D303E] rounded-xl h-12 w-[28rem]"
         value={inputValue}
         onChange={handleInputChange}
       />

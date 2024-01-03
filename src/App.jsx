@@ -12,24 +12,8 @@ function App() {
         <main className="flex bg-[#252836]">
           <Navbar />
           <Routes>
-            <Route
-              path="/"
-              element={
-                <div className="flex grow">
-                  <Home />
-                  <Order />
-                </div>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <div className="flex grow">
-                  <Payment />
-                  <Order />
-                </div>
-              }
-            />
+            <Route path="/" element={<Home />} />
+            <Route path="/payment" element={<Payment />} />
           </Routes>
         </main>
       </BrowserRouter>

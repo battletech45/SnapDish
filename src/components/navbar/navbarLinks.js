@@ -17,9 +17,9 @@ export const navbarLinks = [
     },
     {
       index: 1,
-      name: "Discounts",
+      name: "Payment",
       icon: BadgeDollarSign,
-      href: "/discounts"
+      href: "/payment"
     },
     {
       index: 2,
