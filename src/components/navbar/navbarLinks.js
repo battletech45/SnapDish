@@ -1,6 +1,6 @@
 import {
   Home,
-  BadgePercent,
+  BadgeDollarSign,
   PieChart,
   Mail,
   Bell,
@@ -18,7 +18,7 @@ export const navbarLinks = [
     {
       index: 1,
       name: "Discounts",
-      icon: BadgePercent,
+      icon: BadgeDollarSign,
       href: "/discounts"
     },
     {

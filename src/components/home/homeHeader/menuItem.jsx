@@ -2,7 +2,7 @@ import React from 'react'
 
 const MenuItem = ({ item, index, setIndex }) => {
   return (
-    <div className='flex flex-col items-start' onClick={() => setIndex(item.index)}>
+    <div className='flex flex-col items-start cursor-pointer' onClick={() => setIndex(item.index)}>
         <h4 className={`font-barlow text-sm font-semibold leading-5 mb-4 ${item.index === index  ? 'text-[#EA7C69]' : 'text-white'}`}>
             {item.title}
         </h4>

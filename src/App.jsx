@@ -3,6 +3,7 @@ import Navbar from "./components/navbar/navbar";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./components/home/home";
 import Order from "./components/order/order";
+import Payment from "./components/payment/payment";
 
 function App() {
   return (
@@ -15,14 +16,19 @@ function App() {
               path="/"
               element={
                 <div className="flex grow">
-                  <Home /> 
+                  <Home />
                   <Order />
                 </div>
               }
             />
             <Route
               path="/dashboard"
-              element={<h1 className="grow">Dashboard</h1>}
+              element={
+                <div className="flex grow">
+                  <Payment />
+                  <Order />
+                </div>
+              }
             />
           </Routes>
         </main>
