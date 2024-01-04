@@ -24,7 +24,7 @@ const OrderCheckout = ({ discount, total }) => {
         </div>
         <div className="flex items-center justify-center p-4 w-full rounded-2xl bg-[#EA7C69] cursor-pointer">
           <p className="font-barlow text-xl font-semibold leading-5 text-white">
-            {location.pathname === "/dashboard" ? 'Continue to shop' : 'Continue to Payment'}
+            {location.pathname === "/payment" ? 'Continue to shop' : 'Continue to Payment'}
           </p>
         </div>
       </div>
