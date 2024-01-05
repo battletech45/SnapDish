@@ -11,7 +11,7 @@ const Dashboard = () => {
         <DashboardHeader />
         <DashboardBody />
       </div>
-      <div className="flex flex-col h-screen p-8">
+      <div className="flex flex-col h-screen p-8 py-9 justify-between">
         <MostOrder />
         <MostType />
       </div>

@@ -16,5 +16,11 @@ export const orders = [
         menu: "Grilled steak with mashed potatoes",
         paidprice: "$150",
         status: "Pending"
+    },
+    {
+        username: "Levi Ackerman",
+        menu: "Grilled steak with mashed potatoes",
+        paidprice: "$150",
+        status: "Pending"
     }
 ];
