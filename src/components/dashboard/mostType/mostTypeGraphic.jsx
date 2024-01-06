@@ -1,9 +1,23 @@
-import React from 'react'
+import React from "react";
 
-const MostTypeGraphic = (bgColor, size) => {
+const MostTypeGraphic = () => {
   return (
-      <div className={`w-44 h-44 rounded-full border-8 border-[#65B0F6]`} />
-  )
-}
+    <div className={`w-44 h-44 rounded-full border-8 border-[#65B0F6]`}>
+      <MostTypeYellowGraphic />
+    </div>
+  );
+};
 
-export default MostTypeGraphic
+const MostTypeYellowGraphic = () => {
+  return (
+    <div className={`w-40 h-40 rounded-full border-8 border-[#FFB572]`}>
+      <MostTypePinkGraphic />
+    </div>
+  );
+};
+
+const MostTypePinkGraphic = () => {
+  return <div className={`w-36 h-36 rounded-full border-8 border-[#FF7CA3]`} />;
+};
+
+export default MostTypeGraphic;

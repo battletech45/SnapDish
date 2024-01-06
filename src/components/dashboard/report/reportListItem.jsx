@@ -5,11 +5,13 @@ const ReportListItem = ({ item }) => {
   const [statusColor, setstatusColor] = useState("#ffb672");
 
   return (
-    <section className="flex items-center">
-      <div className={`rounded-full w-8 h-8 mr-8 bg-[#fb7bff]`} />
-      <h4 className="font-barlow text-sm font-normal leading-5 text-white mr-16 w-20">
-        {item.username}
-      </h4>
+    <section className="flex items-center justify-between">
+      <div className="flex items-center gap-8">
+        <div className={`rounded-full w-8 h-8 bg-[#fb7bff]`} />
+        <h4 className="font-barlow text-sm font-normal leading-5 text-white mr-16 w-20">
+          {item.username}
+        </h4>
+      </div>
       <h4 className="font-barlow text-sm font-normal leading-5 text-white text-start mr-16 w-28">
         {item.menu}
       </h4>

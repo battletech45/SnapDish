@@ -6,7 +6,7 @@ import DashboardReport from "./report/dashboardReport";
 const DashboardBody = () => {
   return (
     <section>
-      <div className="flex items-center justify-start gap-16">
+      <div className="flex items-center justify-between gap-16">
         {dashboardInfoData.map((item) => (
           <InfoCard item={item} />
         ))}

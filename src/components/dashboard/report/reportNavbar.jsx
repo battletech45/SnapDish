@@ -2,14 +2,14 @@ import React from "react";
 
 const ReportNavbar = () => {
   return (
-    <div className="flex px-8 border-b border-[#393C49] py-4">
-      <p className="font-barlow text-sm font-semibold leading-5 text-white">
+    <div className="flex border-b border-[#393C49] py-4 justify-between px-16">
+      <p className="font-barlow text-sm font-semibold leading-5 text-white mr-4">
         Customer
       </p>
-      <p className="font-barlow text-sm font-semibold leading-5 text-white ml-40 mr-28">
+      <p className="font-barlow text-sm font-semibold leading-5 text-white">
         Menu
       </p>
-      <p className="font-barlow text-sm font-semibold leading-5 text-white mr-20">
+      <p className="font-barlow text-sm font-semibold leading-5 text-white">
         Total Payment
       </p>
       <p className="font-barlow text-sm font-semibold leading-5 text-white">
