@@ -4,7 +4,7 @@ import { ArrowUp, ArrowDown } from "lucide-react";
 const InfoCard = ({ item }) => {
   const Icon = item.icon;
   return (
-    <section className="flex flex-col gap-4 bg-[#1F1D2B] p-6 rounded-xl w-60 my-4">
+    <section className="flex flex-col gap-4 bg-[#1F1D2B] p-6 rounded-xl w-full my-4 items-center">
       <div className="flex items-center justify-start gap-4">
         <div className="flex items-center justify-center rounded-lg p-2 w-10 h-10 bg-[#252836]">
           <Icon color={item.iconColor} />
