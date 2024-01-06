@@ -2,7 +2,7 @@ import {
   Home,
   BadgeDollarSign,
   PieChart,
-  Mail,
+  PackagePlus,
   Bell,
   Settings,
   LogOut,
@@ -29,9 +29,9 @@ export const navbarLinks = [
     },
     {
       index: 3,
-      name: "Message",
-      icon: Mail,
-      href: "/messages"
+      name: "AddProduct",
+      icon: PackagePlus,
+      href: "/addproduct"
     },
     {
       index: 4,
