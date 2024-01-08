@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 
 const SettingsCard = ({ item, selected, setSelected }) => {
+  const [isOn, setIsOn] = useState(false);
   const Icon = item.icon;
+  const Switch = item.content;
 
   return (
     <section
-      className={`flex flex-col items-center justify-between p-6 gap-8 ${
-        selected === item.index ? "bg-[#EA7C6942]" : "bg-transparent"
+      className={`flex flex-col items-center justify-between p-6 gap-8 rounded-xl w-[20rem] h-[15rem] border-2 ${
+        selected === item.index
+          ? "bg-[#EA7C6942] border-[#EA7C69]"
+          : "bg-transparent border-[#393C49]"
       }`}
       onClick={() => setSelected(item.index)}
     >
@@ -20,12 +24,12 @@ const SettingsCard = ({ item, selected, setSelected }) => {
           >
             {item.title}
           </p>
-          <p className="font-barlow text-sm font-normal leading-4 text-[#ABBBC2]">
+          <p className="font-barlow text-sm font-normal leading-4 text-center text-[#ABBBC2]">
             {item.subtitle}
           </p>
         </div>
       </div>
-      <div>gfdlgldfkgldfgldfk</div>
+      <Switch isOn={isOn} setIsOn={setIsOn} title={item.title}/>
       <div
         className={`rounded-3xl h-1 w-10 ${
           selected === item.index ? "bg-[#EA7C69]" : "bg-transparent"

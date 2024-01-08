@@ -35,18 +35,12 @@ export const navbarLinks = [
     },
     {
       index: 4,
-      name: "Notifications",
-      icon: Bell,
-      href: "/notifications"
-    },
-    {
-      index: 5,
       name: "Settings",
       icon: Settings,
       href: "/settings"
     },
     {
-      index: 6,
+      index: 5,
       name: "Logout",
       icon: LogOut
     }

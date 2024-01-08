@@ -1,34 +1,42 @@
-import { Heart, Store, BadgeDollarSign, Bell, UnlockKeyhole, AlertCircle } from 'lucide-react';
+import { Palette, Ligature, UnlockKeyhole, AlertCircle, Trash2 } from 'lucide-react';
+import SettingsSwitch from './settingsSwitch';
+import SettingsDeleteButton from './settingsDeleteButton';
+import SettingsFontSelector from './settingsFontSelector';
 
 export const settingsItems = [
     {
         index: 0,
         title: "Appereance",
-        subtitle: "theme mode, Font size",
-        icon: Heart
+        subtitle: "Theme Mode",
+        icon: Palette,
+        content: SettingsSwitch
     },
     {
         index: 1,
-        title: "Your Restaurant",
-        subtitle: "Dark and Light mode, Font size",
-        icon: Store
+        title: "Font Size",
+        subtitle: "Set the Font Size",
+        icon: Ligature,
+        content: SettingsFontSelector
     },
     {
         index: 2,
-        title: "Notifications",
-        subtitle: "Customize your notifications",
-        icon: Bell
+        title: "Security",
+        subtitle: "Configure Password, PIN, etc",
+        icon: UnlockKeyhole,
+        content: SettingsSwitch
     },
     {
         index: 3,
-        title: "Security",
-        subtitle: "Configure Password, PIN, etc",
-        icon: UnlockKeyhole
+        title: "About Us",
+        subtitle: "Find out more about Posly",
+        icon: AlertCircle,
+        content: SettingsDeleteButton
     },
     {
         index: 4,
-        title: "About Us",
-        subtitle: "Find out more about Posly",
-        icon: AlertCircle
-    },
+        title: "Delete Account",
+        subtitle: "Delete your account permanently",
+        icon: Trash2,
+        content: SettingsDeleteButton
+    }
 ];
