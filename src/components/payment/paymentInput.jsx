@@ -1,6 +1,6 @@
 import React from "react";
 
-const PaymentInput = ({ title, type, input, setInput }) => {
+const PaymentInput = ({ title, type, input, setInput, maxLength }) => {
 
   const handleInputChange = (e) => {
     setInput(e.target.value);
@@ -13,6 +13,7 @@ const PaymentInput = ({ title, type, input, setInput }) => {
         type={type}
         value={input}
         onChange={handleInputChange}
+        maxLength={maxLength}
         placeholder="Type here..."
         className="flex p-4 gap-2 items-start rounded-lg border border-[#393C49] bg-[#2D303E] text-white"
       />

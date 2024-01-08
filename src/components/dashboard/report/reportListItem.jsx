@@ -5,21 +5,34 @@ const ReportListItem = ({ item }) => {
   const [statusColor, setstatusColor] = useState("#ffb672");
 
   // item.status = complete | prepearing | pending
-  const variants = {
+  const statusVariants = {
     Completed: {
-      style: "bg-teal-500 text-teal-900 font-barlow",
+      style: "bg-[#6BE2BE3D] text-[#50D1AA] font-barlow text-base font-medium",
     },
     Preparing: {
-      style: "bg-amber-500 text-amber-900",
+      style: "bg-[#9290FE33] text-[#9290FE] font-barlow text-base font-medium",
     },
     Pending: {
-      style: "bg-gray-500 text-gray-900",
-    },
+      style: "bg-[#FFB57233] text-[#FFB572] font-barlow text-base font-medium",
+    }
   };
+
+  const profileVariants = {
+    Completed: {
+      style: "bg-[#FFB572]",
+    },
+    Preparing: {
+      style: "bg-[#65B0F6]",
+    },
+    Pending: {
+      style: "bg-[#FF7CA3]",
+    }
+  }
+  
   return (
     <section className="flex items-center justify-between">
       <div className="flex items-center gap-8">
-        <div className={`rounded-full w-8 h-8 bg-[#fb7bff]`} />
+        <div className={`rounded-full w-8 h-8 ${profileVariants[item.status].style}`} />
         <h4 className="font-barlow text-sm font-normal leading-5 text-white mr-16 w-20">
           {item.username}
         </h4>
@@ -32,7 +45,7 @@ const ReportListItem = ({ item }) => {
       </h4>
       <div
         className={`flex flex-col items-center justify-center py-1 px-3 rounded-3xl w-28 ${
-          variants[item.status].style
+          statusVariants[item.status].style
         }`}
       >
         <p>{item.status}</p>

@@ -35,6 +35,7 @@ const PaymentBody = () => {
         <PaymentInput
           title={"Card Number"}
           type={"number"}
+          maxLength={16}
           input={cardNumber}
           setInput={setCardNumber}
         />
@@ -49,6 +50,7 @@ const PaymentBody = () => {
         <PaymentInput
           title={"CVV"}
           type={"password"}
+          maxLength={3}
           input={password}
           setInput={setPassword}
         />

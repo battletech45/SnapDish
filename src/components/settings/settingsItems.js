@@ -4,7 +4,7 @@ export const settingsItems = [
     {
         index: 0,
         title: "Appereance",
-        subtitle: "Dark and Light mode, Font size",
+        subtitle: "theme mode, Font size",
         icon: Heart
     },
     {
