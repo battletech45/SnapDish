@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardHeader from "./dashboardHeader";
 import DashboardBody from "./dashboardBody";
 import MostOrder from "./mostOrder/mostOrder";
 import MostType from "./mostType/mostType";
 
 const Dashboard = () => {
+
   return (
     <section className="md:flex grow">
       <div className="grow flex flex-col h-screen ml-24 bg-[#252836] p-8">
