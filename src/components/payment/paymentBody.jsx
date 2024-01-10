@@ -34,7 +34,7 @@ const PaymentBody = () => {
         />
         <PaymentInput
           title={"Card Number"}
-          type={"number"}
+          type={"text"}
           maxLength={16}
           input={cardNumber}
           setInput={setCardNumber}
