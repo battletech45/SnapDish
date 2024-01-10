@@ -5,14 +5,13 @@ import MostOrder from "./mostOrder/mostOrder";
 import MostType from "./mostType/mostType";
 
 const Dashboard = () => {
-
   return (
-    <section className="flex grow">
-      <div className="grow flex flex-col h-screen ml-24 bg-[#252836] p-8">
+    <section className="flex flex-col grow h-full xl:flex-row bg-[#252836]">
+      <div className="flex flex-col h-screen ml-24 p-8 xl:grow">
         <DashboardHeader />
         <DashboardBody />
       </div>
-      <div className="flex flex-col h-screen p-8 py-9 justify-between">
+      <div className="flex p-8 py-9 justify-between gap-2 ml-24 mt-12 xl:mt-0 xl:flex-col xl:grow xl:ml-0">
         <MostOrder />
         <MostType />
       </div>
