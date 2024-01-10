@@ -7,7 +7,7 @@ import MostType from "./mostType/mostType";
 const Dashboard = () => {
 
   return (
-    <section className="md:flex grow">
+    <section className="flex grow">
       <div className="grow flex flex-col h-screen ml-24 bg-[#252836] p-8">
         <DashboardHeader />
         <DashboardBody />
