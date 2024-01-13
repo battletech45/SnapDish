@@ -6,7 +6,7 @@ import MostType from "./mostType/mostType";
 
 const Dashboard = () => {
   return (
-    <section className="flex flex-col grow h-full xl:flex-row bg-[#252836]">
+    <section className="flex flex-col grow h-screen overflow-y-scroll xl:flex-row bg-[#252836]">
       <div className="flex flex-col h-screen ml-24 p-8 xl:grow">
         <DashboardHeader />
         <DashboardBody />
