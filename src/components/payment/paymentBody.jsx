@@ -16,7 +16,7 @@ const PaymentBody = () => {
       <h3 className="font-barlow text-xl font-semibold leading-7 text-white">
         Payment Method
       </h3>
-      <div className="flex items-center justify-start gap-8 my-8">
+      <div className="flex items-center justify-start gap-8 my-4">
         {payTypes.map((item) => (
           <PayMethodCard
             item={item}
@@ -55,7 +55,7 @@ const PaymentBody = () => {
           setInput={setPassword}
         />
       </div>
-      <div className="bg-[#393C49] w-full h-[2px] my-20" />
+      <div className="bg-[#393C49] w-full h-[2px] my-12" />
       <div className="flex items-center gap-12">
         <PaymentButtons title={"Cancel"} bgColor={"#252836"} />
         <PaymentButtons title={"Confirm Payment"} bgColor={"#EA7C69"} />
