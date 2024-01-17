@@ -9,7 +9,7 @@ const OrderItem = ({ item }) => {
         <img src={item.photoURL} alt="mealPhoto" className="rounded-full w-10 h-10"/>
           <div className="flex flex-col items-start w-36">
             <p className="font-barlow text-base text-white font-medium leading-6 overflow-clip line-clamp-1">
-              {item.title}
+              {item.first}
             </p>
             <p className="font-barlow text-sm font-medium leading-4 text-[#ABBBC2]">
               $ {item.price}

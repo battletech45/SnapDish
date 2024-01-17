@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import BodyTitle from "./bodyTitle";
 import RecipeCards from "./recipeCards";
-import { dummyData } from "./dummyData";
+import { useOrder } from "../../../stores/useOrderStore";
 import { collection, getDocs, query } from "firebase/firestore";
 import { firestore } from "../../../services/firebaseConfig";
 
 const HomeBody = () => {
   let temp = [];
   const [data, setData] = useState([]);
+  const { addOrder, order} = useOrder();
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,9 +38,10 @@ const HomeBody = () => {
           data.map((item) => (
             <RecipeCards
               title={item.first}
-              photoURL={item.photoURL ?? ''}
+              photoURL="https://www.themealdb.com/images/media/meals/020z181619788503.jpg"
               price={item.price}
               quantity={item.quantity}
+              handleClick={addOrder}
               />
           ))
         }
