@@ -2,6 +2,8 @@ import React from "react";
 import OrderNoteBar from "./orderNoteBar";
 
 const OrderItem = ({ item }) => {
+  console.log('THIS IS ITEM:' + item['first']);
+
   return (
     <section className="my-8">
       <div className="flex items-center justify-between">
@@ -19,7 +21,7 @@ const OrderItem = ({ item }) => {
         <div className="flex items-center gap-4">
           <div className="flex w-12 h-12 p-4 justify-center items-center border border-[#393C49] bg-[#2D303E] rounded-lg">
             <p className="font-barlow text-base font-medium leading-6 text-white">
-              {item.quantity}
+              {item.amount}
             </p>
           </div>
           <p className="font-barlow text-base text-white font-medium leading-6 px-1">

@@ -9,7 +9,7 @@ export const useOrder = create((set) => ({
       );
 
       if (existingItemIndex !== -1) {
-        const updatedCart = [...state.cart];
+        const updatedCart = [...state.order];
         updatedCart[existingItemIndex].amount += 1;
         return { order: updatedCart };
       } else {

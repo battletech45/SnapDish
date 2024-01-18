@@ -41,7 +41,7 @@ const HomeBody = () => {
               photoURL="https://www.themealdb.com/images/media/meals/020z181619788503.jpg"
               price={item.price}
               quantity={item.quantity}
-              handleClick={addOrder}
+              handleClick={() => addOrder(item, 1)}
               />
           ))
         }
