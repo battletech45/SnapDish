@@ -5,7 +5,7 @@ export const useOrder = create((set) => ({
   addOrder: (item, amount) => {
     set((state) => {
       const existingItemIndex = state.order.findIndex(
-        (cartItem) => cartItem.id === item.id
+        (orderItem) => orderItem.first === item.first
       );
 
       if (existingItemIndex !== -1) {
@@ -20,7 +20,7 @@ export const useOrder = create((set) => ({
   deleteFromCart: (item) => {
     set((state) => {
       const existingItemIndex = state.order.findIndex(
-        (cartItem) => cartItem.id === item.id
+        (cartItem) => cartItem.first === item.first
       );
 
       if (existingItemIndex !== -1) {
