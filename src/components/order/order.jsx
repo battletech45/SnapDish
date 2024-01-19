@@ -9,7 +9,7 @@ const Order = () => {
   const { order } = useOrder();
 
   return (
-    <div className="hidden xl:flex flex-col w-1/3 bg-[#1F1D2B] rounded-l-2xl h-screen p-6 py-9 ">
+    <div className="flex flex-col w-1/3 bg-[#1F1D2B] rounded-l-2xl h-screen p-6 py-9 ">
       <OrderHeader />
       <OrderList />
       <OrderCheckout
