@@ -9,7 +9,11 @@ const OrderItem = ({ item }) => {
     <section className="my-8">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-        <img src={item.photoURL} alt="mealPhoto" className="rounded-full w-10 h-10"/>
+          <img
+            src={item.photoURL}
+            alt="mealPhoto"
+            className="rounded-full w-10 h-10"
+          />
           <div className="flex flex-col items-start w-36">
             <p className="font-barlow text-base text-white font-medium leading-6 overflow-clip line-clamp-1">
               {item.first}
@@ -26,9 +30,7 @@ const OrderItem = ({ item }) => {
             </p>
           </div>
           <p className="font-barlow text-base text-white font-medium leading-6 px-1">
-            $ {order
-                    .reduce((acc, item) => acc + item.amount * item.price, 0)
-                    .toFixed(2)}
+            $ {(item.amount * item.price).toFixed(2)}
           </p>
         </div>
       </div>
