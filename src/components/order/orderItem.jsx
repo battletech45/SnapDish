@@ -1,8 +1,9 @@
 import React from "react";
 import OrderNoteBar from "./orderNoteBar";
+import { useOrder } from "../../stores/useOrderStore";
 
 const OrderItem = ({ item }) => {
-  console.log('THIS IS ITEM:' + item['first']);
+  const { order } = useOrder();
 
   return (
     <section className="my-8">
@@ -25,7 +26,9 @@ const OrderItem = ({ item }) => {
             </p>
           </div>
           <p className="font-barlow text-base text-white font-medium leading-6 px-1">
-            $ {item.price}
+            $ {order
+                    .reduce((acc, item) => acc + item.amount * item.price, 0)
+                    .toFixed(2)}
           </p>
         </div>
       </div>
