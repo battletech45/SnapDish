@@ -10,7 +10,7 @@ const OrderItem = ({ item }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <img
-            src={item.photoURL}
+            src="https://www.themealdb.com/images/media/meals/020z181619788503.jpg"
             alt="mealPhoto"
             className="rounded-full w-10 h-10"
           />
