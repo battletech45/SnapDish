@@ -1,9 +1,8 @@
 import React from "react";
 import OrderNoteBar from "./orderNoteBar";
-import { useOrder } from "../../stores/useOrderStore";
+
 
 const OrderItem = ({ item }) => {
-  const { order } = useOrder();
 
   return (
     <section className="my-8">
@@ -35,7 +34,7 @@ const OrderItem = ({ item }) => {
         </div>
       </div>
       <div className="flex items-center justify-between gap-6">
-        <OrderNoteBar />
+        <OrderNoteBar item={item} />
       </div>
     </section>
   );

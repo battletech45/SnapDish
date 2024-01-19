@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Trash } from "lucide-react";
+import { useOrder } from "../../stores/useOrderStore";
 
-const OrderNoteBar = () => {
+const OrderNoteBar = ({ item }) => {
   const [inputValue, setInputValue] = useState("");
+  const { deleteFromOrder } = useOrder();
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
@@ -21,6 +23,7 @@ const OrderNoteBar = () => {
         className={`flex items-center justify-center p-4 h-12 w-12 rounded-lg bg-[#2D303E] border cursor-pointer ${
           inputValue !== "" ? "border-[#FF7CA3]" : "border-[#EA7C69]"
         }`}
+        onClick={() => deleteFromOrder(item)}
       >
         <Trash color={inputValue !== "" ? "#FF7CA3" : "#EA7C69"} />
       </div>

@@ -17,14 +17,14 @@ export const useOrder = create((set) => ({
       }
     });
   },
-  deleteFromCart: (item) => {
+  deleteFromOrder: (item) => {
     set((state) => {
       const existingItemIndex = state.order.findIndex(
         (cartItem) => cartItem.first === item.first
       );
 
       if (existingItemIndex !== -1) {
-        const updatedCart = [...state.cart];
+        const updatedCart = [...state.order];
         if (updatedCart[existingItemIndex].amount > 1) {
           updatedCart[existingItemIndex].amount -= 1;
         } else {
