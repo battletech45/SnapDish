@@ -5,7 +5,7 @@ import { menuCategories } from "./menuCategories"
 const Menu = () => {
     const [index, setIndex] = useState(0);
   return (
-    <div className="flex gap-6 items-center border-b border-[#393C49]">
+    <div className="flex gap-2 md:gap-6 items-center border-b border-[#393C49]">
         {menuCategories.map((item) => (
         <MenuItem
           item={item} 
