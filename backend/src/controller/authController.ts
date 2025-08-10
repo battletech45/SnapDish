@@ -3,6 +3,27 @@ import admin from "../service/firebaseService";
 import { findUserByUid, createUser } from "../model/userModel";
 import logger from "../util/logger";
 
+export const emailLogin = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password are required" });
+  }
+
+  try {
+    const user = await admin.auth().getUserByEmail(email);
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    const token = await admin.auth().createCustomToken(user.uid);
+    return res.status(200).json({ token });
+  } catch (error) {
+    logger.error("Error verifying email", error);
+    return res.status(401).json({ error: "Invalid email or password" });
+  }
+};
+
 export const googleLogin = async (req: Request, res: Response) => {
   const { idToken } = req.body;
 
