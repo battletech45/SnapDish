@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import logger from "./util/logger";
 import morgan from "morgan";
+import authRoute from "./route/authRoute";
 
 dotenv.config();
 
@@ -18,9 +19,7 @@ app.use(
   })
 );
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+app.use("/auth", authRoute);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
