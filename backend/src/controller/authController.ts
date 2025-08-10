@@ -25,9 +25,9 @@ export const googleLogin = async (req: Request, res: Response) => {
         emailVerified,
         phoneNumber,
       });
-      res.status(201).json(newUser);
+      return res.status(201).json(newUser);
     }
-    res.status(200).json(user);
+    return res.status(200).json(user);
   } catch (error) {
     logger.error("Error verifying idToken", error);
     return res.status(401).json({ error: "Invalid idToken" });

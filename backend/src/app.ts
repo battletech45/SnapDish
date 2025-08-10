@@ -3,13 +3,17 @@ import dotenv from "dotenv";
 import logger from "./util/logger";
 import morgan from "morgan";
 import authRoute from "./route/authRoute";
+import multer from "multer";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.BACKEND_PORT || 3000;
+const upload = multer();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(upload.any());
 
 app.use(
   morgan("combined", {
