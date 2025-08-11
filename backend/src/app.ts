@@ -2,8 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import logger from "./util/logger";
 import morgan from "morgan";
-import authRoute from "./route/authRoute";
 import multer from "multer";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import apiRoute from "./route/apiRoute";
 
 dotenv.config();
 
@@ -23,7 +24,13 @@ app.use(
   })
 );
 
-app.use("/auth", authRoute);
+app.use("/api", apiRoute);
+
+// 404 handler for undefined routes
+app.use(notFoundHandler);
+
+// Global error handling middleware (must be last)
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

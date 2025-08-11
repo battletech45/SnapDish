@@ -2,25 +2,26 @@ import { Request, Response } from "express";
 import admin from "../service/firebaseService";
 import { findUserByUid, createUser } from "../model/userModel";
 import logger from "../util/logger";
+import { apiResponse } from "../util/apiResponse";
 
 export const emailLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
+    return apiResponse.validationError(res, "Email and password are required");
   }
 
   try {
     const user = await admin.auth().getUserByEmail(email);
     if (!user) {
-      return res.status(400).json({ error: "User not found" });
+      return apiResponse.notFound(res, "User not found");
     }
 
     const token = await admin.auth().createCustomToken(user.uid);
-    return res.status(200).json({ token });
+    return apiResponse.success(res, { token }, "Login successful");
   } catch (error) {
     logger.error("Error verifying email", error);
-    return res.status(401).json({ error: "Invalid email or password" });
+    return apiResponse.unauthorized(res, "Invalid email or password");
   }
 };
 
@@ -28,7 +29,7 @@ export const googleLogin = async (req: Request, res: Response) => {
   const { idToken } = req.body;
 
   if (!idToken) {
-    return res.status(400).json({ error: "No idToken provided" });
+    return apiResponse.validationError(res, "No idToken provided");
   }
 
   try {
@@ -46,11 +47,11 @@ export const googleLogin = async (req: Request, res: Response) => {
         emailVerified,
         phoneNumber,
       });
-      return res.status(201).json(newUser);
+      return apiResponse.created(res, newUser, "User created successfully");
     }
-    return res.status(200).json(user);
+    return apiResponse.success(res, user, "Login successful");
   } catch (error) {
     logger.error("Error verifying idToken", error);
-    return res.status(401).json({ error: "Invalid idToken" });
+    return apiResponse.unauthorized(res, "Invalid idToken");
   }
 };
