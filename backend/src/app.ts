@@ -4,34 +4,31 @@ import logger from "./util/logger";
 import morgan from "morgan";
 import multer from "multer";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
+import { analyticsMiddleware } from "./middleware/analyticsMiddleware";
 import apiRoute from "./route/apiRoute";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.BACKEND_PORT || 3000;
-const upload = multer();
+const PORT = process.env.PORT || 8080;
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(upload.any());
+app.use(morgan("combined"));
 
-app.use(
-  morgan("combined", {
-    stream: {
-      write: (message: string) => logger.info(message.trim()),
-    },
-  })
-);
+// Analytics middleware (add before routes)
+app.use(analyticsMiddleware);
 
+// Routes
 app.use("/api", apiRoute);
 
-// 404 handler for undefined routes
+// Error handling
 app.use(notFoundHandler);
-
-// Global error handling middleware (must be last)
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+  logger.info(`Server is running on port ${PORT}`);
 });
+
+export default app;
