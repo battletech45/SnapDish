@@ -3,7 +3,6 @@ import { Item } from "../type/itemType";
 import * as itemModel from "../model/itemModel";
 import * as menuModel from "../model/menuModel";
 import { apiResponse } from "../util/apiResponse";
-import logger from "../util/logger";
 
 // Get item by ID - GET method, use req.params for ID
 export const getItemById = async (req: Request, res: Response) => {
@@ -21,7 +20,7 @@ export const getItemById = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, item, "Item retrieved successfully");
   } catch (error) {
-    logger.error("Error getting item by ID:", error);
+    console.error("Error getting item by ID:", error);
     return apiResponse.internalError(res, "Failed to get item");
   }
 };
@@ -52,7 +51,7 @@ export const getItemsByMenuId = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, validItems, "Items retrieved successfully");
   } catch (error) {
-    logger.error("Error getting items by menu ID:", error);
+    console.error("Error getting items by menu ID:", error);
     return apiResponse.internalError(res, "Failed to get items");
   }
 };
@@ -92,7 +91,7 @@ export const getAvailableItemsByMenuId = async (
       "Available items retrieved successfully"
     );
   } catch (error) {
-    logger.error("Error getting available items by menu ID:", error);
+    console.error("Error getting available items by menu ID:", error);
     return apiResponse.internalError(res, "Failed to get available items");
   }
 };
@@ -109,7 +108,7 @@ export const getItemsByCategory = async (req: Request, res: Response) => {
     const items = await itemModel.findItemsByCategory(category);
     return apiResponse.success(res, items, "Items retrieved successfully");
   } catch (error) {
-    logger.error("Error getting items by category:", error);
+    console.error("Error getting items by category:", error);
     return apiResponse.internalError(res, "Failed to get items");
   }
 };
@@ -140,7 +139,7 @@ export const getItemsByRestaurantId = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, validItems, "Items retrieved successfully");
   } catch (error) {
-    logger.error("Error getting items by restaurant ID:", error);
+    console.error("Error getting items by restaurant ID:", error);
     return apiResponse.internalError(res, "Failed to get items");
   }
 };
@@ -151,7 +150,7 @@ export const getAllItems = async (req: Request, res: Response) => {
     const items = await itemModel.getAllItems();
     return apiResponse.success(res, items, "All items retrieved successfully");
   } catch (error) {
-    logger.error("Error getting all items:", error);
+    console.error("Error getting all items:", error);
     return apiResponse.internalError(res, "Failed to get items");
   }
 };
@@ -287,7 +286,7 @@ export const createItem = async (req: Request, res: Response) => {
     const newItem = await itemModel.createItem(itemData);
     return apiResponse.created(res, newItem, "Item created successfully");
   } catch (error) {
-    logger.error("Error creating item:", error);
+    console.error("Error creating item:", error);
     return apiResponse.internalError(res, "Failed to create item");
   }
 };
@@ -406,7 +405,7 @@ export const updateItem = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, updatedItem, "Item updated successfully");
   } catch (error) {
-    logger.error("Error updating item:", error);
+    console.error("Error updating item:", error);
     return apiResponse.internalError(res, "Failed to update item");
   }
 };
@@ -427,7 +426,7 @@ export const deleteItem = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, null, "Item deleted successfully");
   } catch (error) {
-    logger.error("Error deleting item:", error);
+    console.error("Error deleting item:", error);
     return apiResponse.internalError(res, "Failed to delete item");
   }
 };
@@ -456,7 +455,7 @@ export const toggleItemAvailability = async (req: Request, res: Response) => {
       "Item availability toggled successfully"
     );
   } catch (error) {
-    logger.error("Error toggling item availability:", error);
+    console.error("Error toggling item availability:", error);
     return apiResponse.internalError(res, "Failed to toggle item availability");
   }
 };

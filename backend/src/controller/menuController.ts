@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { Menu } from "../type/menuType";
 import * as menuModel from "../model/menuModel";
 import { apiResponse } from "../util/apiResponse";
-import logger from "../util/logger";
 
 // Get menu by ID - GET method, use req.params for ID
 export const getMenuById = async (req: Request, res: Response) => {
@@ -20,7 +19,7 @@ export const getMenuById = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, menu, "Menu retrieved successfully");
   } catch (error) {
-    logger.error("Error getting menu by ID:", error);
+    console.error("Error getting menu by ID:", error);
     return apiResponse.internalError(res, "Failed to get menu");
   }
 };
@@ -37,7 +36,7 @@ export const getMenusByRestaurantId = async (req: Request, res: Response) => {
     const menus = await menuModel.findMenusByRestaurantId(restaurantId);
     return apiResponse.success(res, menus, "Menus retrieved successfully");
   } catch (error) {
-    logger.error("Error getting menus by restaurant ID:", error);
+    console.error("Error getting menus by restaurant ID:", error);
     return apiResponse.internalError(res, "Failed to get menus");
   }
 };
@@ -61,7 +60,7 @@ export const getActiveMenusByRestaurantId = async (
       "Active menus retrieved successfully"
     );
   } catch (error) {
-    logger.error("Error getting active menus by restaurant ID:", error);
+    console.error("Error getting active menus by restaurant ID:", error);
     return apiResponse.internalError(res, "Failed to get active menus");
   }
 };
@@ -72,7 +71,7 @@ export const getAllMenus = async (req: Request, res: Response) => {
     const menus = await menuModel.getAllMenus();
     return apiResponse.success(res, menus, "All menus retrieved successfully");
   } catch (error) {
-    logger.error("Error getting all menus:", error);
+    console.error("Error getting all menus:", error);
     return apiResponse.internalError(res, "Failed to get menus");
   }
 };
@@ -154,7 +153,7 @@ export const createMenu = async (req: Request, res: Response) => {
     const newMenu = await menuModel.createMenu(menuData);
     return apiResponse.created(res, newMenu, "Menu created successfully");
   } catch (error) {
-    logger.error("Error creating menu:", error);
+    console.error("Error creating menu:", error);
     return apiResponse.internalError(res, "Failed to create menu");
   }
 };
@@ -244,7 +243,7 @@ export const updateMenu = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, updatedMenu, "Menu updated successfully");
   } catch (error) {
-    logger.error("Error updating menu:", error);
+    console.error("Error updating menu:", error);
     return apiResponse.internalError(res, "Failed to update menu");
   }
 };
@@ -265,7 +264,7 @@ export const deleteMenu = async (req: Request, res: Response) => {
 
     return apiResponse.success(res, null, "Menu deleted successfully");
   } catch (error) {
-    logger.error("Error deleting menu:", error);
+    console.error("Error deleting menu:", error);
     return apiResponse.internalError(res, "Failed to delete menu");
   }
 };
@@ -294,7 +293,7 @@ export const toggleMenuActiveStatus = async (req: Request, res: Response) => {
       "Menu active status toggled successfully"
     );
   } catch (error) {
-    logger.error("Error toggling menu active status:", error);
+    console.error("Error toggling menu active status:", error);
     return apiResponse.internalError(
       res,
       "Failed to toggle menu active status"
@@ -323,7 +322,7 @@ export const addItemToMenu = async (req: Request, res: Response) => {
       "Item added to menu successfully"
     );
   } catch (error) {
-    logger.error("Error adding item to menu:", error);
+    console.error("Error adding item to menu:", error);
     return apiResponse.internalError(res, "Failed to add item to menu");
   }
 };
@@ -348,7 +347,7 @@ export const removeItemFromMenu = async (req: Request, res: Response) => {
       "Item removed from menu successfully"
     );
   } catch (error) {
-    logger.error("Error removing item from menu:", error);
+    console.error("Error removing item from menu:", error);
     return apiResponse.internalError(res, "Failed to remove item from menu");
   }
 };

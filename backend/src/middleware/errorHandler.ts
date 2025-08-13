@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { apiResponse } from "../util/apiResponse";
-import logger from "../util/logger";
 
 // Custom error class for API errors
 export class ApiError extends Error {
@@ -53,7 +52,7 @@ export const errorHandler = (
   }
 
   // Log error
-  logger.error(`Error ${statusCode}: ${message}`, {
+  console.error(`Error ${statusCode}: ${message}`, {
     error: error.message,
     stack: error.stack,
     url: req.url,

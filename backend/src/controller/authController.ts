@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
 import admin from "../service/firebaseService";
 import { findUserByUid, createUser } from "../model/userModel";
-import logger from "../util/logger";
 import { apiResponse } from "../util/apiResponse";
-import { backendAnalytics } from "../util/backendAnalytics";
 
 export const emailLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -15,19 +13,16 @@ export const emailLogin = async (req: Request, res: Response) => {
   try {
     const user = await admin.auth().getUserByEmail(email);
     if (!user) {
-      await backendAnalytics.logAuthFailed('email', 'User not found', req.ip);
       return apiResponse.notFound(res, "User not found");
     }
 
     const token = await admin.auth().createCustomToken(user.uid);
-    
+
     // Log successful login
-    await backendAnalytics.logUserLogin(user.uid, 'email', true);
-    
+
     return apiResponse.success(res, { token }, "Login successful");
   } catch (error) {
-    logger.error("Error verifying email", error);
-    await backendAnalytics.logAuthFailed('email', 'Invalid credentials', req.ip);
+    console.error("Error verifying email", error);
     return apiResponse.unauthorized(res, "Invalid email or password");
   }
 };
@@ -54,24 +49,17 @@ export const googleLogin = async (req: Request, res: Response) => {
         emailVerified,
         phoneNumber,
       });
-      
+
       // Log user registration
-      await backendAnalytics.logUserRegistered(uid, 'google', {
-        email,
-        displayName,
-        emailVerified
-      });
-      
+
       return apiResponse.created(res, newUser, "User created successfully");
     }
-    
+
     // Log successful login
-    await backendAnalytics.logUserLogin(uid, 'google', true);
-    
+
     return apiResponse.success(res, user, "Login successful");
   } catch (error) {
-    logger.error("Error verifying idToken", error);
-    await backendAnalytics.logAuthFailed('google', 'Invalid idToken', req.ip);
+    console.error("Error verifying idToken", error);
     return apiResponse.unauthorized(res, "Invalid idToken");
   }
 };
