@@ -130,11 +130,33 @@ export const createMenu = async (req: Request, res: Response) => {
   let validatedProductIds: string[] = [];
   if (productIds !== undefined) {
     if (Array.isArray(productIds)) {
+      // If it's already an array, filter for strings
       validatedProductIds = productIds.filter((id) => typeof id === "string");
+    } else if (typeof productIds === "string") {
+      // Try to parse as JSON first (for JSON strings in form-data)
+      try {
+        const parsed = JSON.parse(productIds);
+        if (Array.isArray(parsed)) {
+          validatedProductIds = parsed.filter((id) => typeof id === "string");
+        } else {
+          return apiResponse.validationError(
+            res,
+            "productIds JSON string must contain an array"
+          );
+        }
+      } catch (jsonError) {
+        // If JSON parsing fails, try comma-separated string
+        if (productIds.includes(",")) {
+          validatedProductIds = productIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+        } else if (productIds.trim() !== "") {
+          // Single item
+          validatedProductIds = [productIds.trim()];
+        }
+      }
     } else {
       return apiResponse.validationError(
         res,
-        "productIds must be an array of strings"
+        "productIds must be an array of strings, a JSON string, or a comma-separated string"
       );
     }
   }
@@ -215,11 +237,33 @@ export const updateMenu = async (req: Request, res: Response) => {
   let validatedProductIds: string[] | undefined = undefined;
   if (productIds !== undefined) {
     if (Array.isArray(productIds)) {
+      // If it's already an array, filter for strings
       validatedProductIds = productIds.filter((id) => typeof id === "string");
+    } else if (typeof productIds === "string") {
+      // Try to parse as JSON first (for JSON strings in form-data)
+      try {
+        const parsed = JSON.parse(productIds);
+        if (Array.isArray(parsed)) {
+          validatedProductIds = parsed.filter((id) => typeof id === "string");
+        } else {
+          return apiResponse.validationError(
+            res,
+            "productIds JSON string must contain an array"
+          );
+        }
+      } catch (jsonError) {
+        // If JSON parsing fails, try comma-separated string
+        if (productIds.includes(",")) {
+          validatedProductIds = productIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+        } else if (productIds.trim() !== "") {
+          // Single item
+          validatedProductIds = [productIds.trim()];
+        }
+      }
     } else {
       return apiResponse.validationError(
         res,
-        "productIds must be an array of strings"
+        "productIds must be an array of strings, a JSON string, or a comma-separated string"
       );
     }
   }
