@@ -1,8 +1,7 @@
 import { Menu } from "../type/menuType";
-import admin from "../service/firebaseService";
+import admin, { firestore } from "../service/firebaseService";
 
-const db = admin.firestore();
-const menusCollection = db.collection("menus");
+const menusCollection = firestore.collection("menus");
 
 export const findMenuById = async (id: string): Promise<Menu | null> => {
   try {
@@ -28,6 +27,7 @@ export const findMenusByRestaurantId = async (
   try {
     const snapshot = await menusCollection
       .where("restaurantId", "==", restaurantId)
+      .orderBy("sortOrder", "asc")
       .get();
 
     return snapshot.docs.map((doc) => ({
@@ -49,6 +49,7 @@ export const findActiveMenusByRestaurantId = async (
     const snapshot = await menusCollection
       .where("restaurantId", "==", restaurantId)
       .where("isActive", "==", true)
+      .orderBy("sortOrder", "asc")
       .get();
 
     return snapshot.docs.map((doc) => ({
@@ -59,6 +60,30 @@ export const findActiveMenusByRestaurantId = async (
     })) as Menu[];
   } catch (error) {
     console.error("Error finding active menus by restaurant ID:", error);
+    return [];
+  }
+};
+
+export const findMenusByCategory = async (
+  restaurantId: string,
+  category: string
+): Promise<Menu[]> => {
+  try {
+    const snapshot = await menusCollection
+      .where("restaurantId", "==", restaurantId)
+      .where("category", "==", category)
+      .where("isActive", "==", true)
+      .orderBy("sortOrder", "asc")
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
+      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+    })) as Menu[];
+  } catch (error) {
+    console.error("Error finding menus by category:", error);
     return [];
   }
 };
@@ -117,7 +142,7 @@ export const deleteMenu = async (id: string): Promise<boolean> => {
 
 export const getAllMenus = async (): Promise<Menu[]> => {
   try {
-    const snapshot = await menusCollection.get();
+    const snapshot = await menusCollection.orderBy("sortOrder", "asc").get();
 
     return snapshot.docs.map((doc) => ({
       id: doc.id,
@@ -131,7 +156,7 @@ export const getAllMenus = async (): Promise<Menu[]> => {
   }
 };
 
-// New function to add item ID to menu
+// Add item to menu
 export const addItemToMenu = async (
   menuId: string,
   itemId: string
@@ -141,10 +166,10 @@ export const addItemToMenu = async (
     if (!menu) return null;
 
     const now = new Date();
-    const updatedProductIds = [...menu.productIds, itemId];
+    const updatedItemIds = [...menu.itemIds, itemId];
 
     const updateData = {
-      productIds: updatedProductIds,
+      itemIds: updatedItemIds,
       updatedAt: admin.firestore.Timestamp.fromDate(now),
     };
 
@@ -156,7 +181,7 @@ export const addItemToMenu = async (
   }
 };
 
-// New function to remove item ID from menu
+// Remove item from menu
 export const removeItemFromMenu = async (
   menuId: string,
   itemId: string
@@ -165,10 +190,10 @@ export const removeItemFromMenu = async (
     const menu = await findMenuById(menuId);
     if (!menu) return null;
 
-    const updatedProductIds = menu.productIds.filter((id) => id !== itemId);
+    const updatedItemIds = menu.itemIds.filter((id) => id !== itemId);
 
     const updateData = {
-      productIds: updatedProductIds,
+      itemIds: updatedItemIds,
       updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
     };
 
@@ -176,6 +201,55 @@ export const removeItemFromMenu = async (
     return findMenuById(menuId);
   } catch (error) {
     console.error("Error removing item from menu:", error);
+    return null;
+  }
+};
+
+// Add combo to menu
+export const addComboToMenu = async (
+  menuId: string,
+  comboId: string
+): Promise<Menu | null> => {
+  try {
+    const menu = await findMenuById(menuId);
+    if (!menu) return null;
+
+    const now = new Date();
+    const updatedComboIds = [...menu.comboIds, comboId];
+
+    const updateData = {
+      comboIds: updatedComboIds,
+      updatedAt: admin.firestore.Timestamp.fromDate(now),
+    };
+
+    await menusCollection.doc(menuId).update(updateData);
+    return findMenuById(menuId);
+  } catch (error) {
+    console.error("Error adding combo to menu:", error);
+    return null;
+  }
+};
+
+// Remove combo from menu
+export const removeComboFromMenu = async (
+  menuId: string,
+  comboId: string
+): Promise<Menu | null> => {
+  try {
+    const menu = await findMenuById(menuId);
+    if (!menu) return null;
+
+    const updatedComboIds = menu.comboIds.filter((id) => id !== comboId);
+
+    const updateData = {
+      comboIds: updatedComboIds,
+      updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
+    };
+
+    await menusCollection.doc(menuId).update(updateData);
+    return findMenuById(menuId);
+  } catch (error) {
+    console.error("Error removing combo from menu:", error);
     return null;
   }
 };

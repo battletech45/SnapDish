@@ -110,3 +110,55 @@ export const getAllItems = async (): Promise<Item[]> => {
     return [];
   }
 };
+
+export const findItemsByRestaurantId = async (
+  restaurantId: string
+): Promise<Item[]> => {
+  try {
+    const snapshot = await itemsCollection
+      .where("restaurantId", "==", restaurantId)
+      .where("isAvailable", "==", true)
+      .get();
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
+      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+    })) as Item[];
+  } catch (error) {
+    console.error("Error finding items by restaurant ID:", error);
+    return [];
+  }
+};
+
+export const findItemsByIds = async (itemIds: string[]): Promise<Item[]> => {
+  try {
+    if (itemIds.length === 0) return [];
+
+    const items: Item[] = [];
+
+    // Firestore has a limit of 10 items per 'in' query, so we need to batch
+    const batchSize = 10;
+    for (let i = 0; i < itemIds.length; i += batchSize) {
+      const batch = itemIds.slice(i, i + batchSize);
+      const snapshot = await itemsCollection
+        .where(admin.firestore.FieldPath.documentId(), "in", batch)
+        .get();
+
+      const batchItems = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data()?.createdAt?.toDate() || new Date(),
+        updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      })) as Item[];
+
+      items.push(...batchItems);
+    }
+
+    return items;
+  } catch (error) {
+    console.error("Error finding items by IDs:", error);
+    return [];
+  }
+};

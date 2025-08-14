@@ -65,6 +65,27 @@ export const getActiveMenusByRestaurantId = async (
   }
 };
 
+// Get menus by category - GET method, use req.params for restaurantId and category
+export const getMenusByCategory = async (req: Request, res: Response) => {
+  const { restaurantId, category } = req.params;
+
+  if (!restaurantId || !category) {
+    return apiResponse.validationError(res, "Restaurant ID and category are required");
+  }
+
+  try {
+    const menus = await menuModel.findMenusByCategory(restaurantId, category);
+    return apiResponse.success(
+      res,
+      menus,
+      "Menus by category retrieved successfully"
+    );
+  } catch (error) {
+    console.error("Error getting menus by category:", error);
+    return apiResponse.internalError(res, "Failed to get menus by category");
+  }
+};
+
 // Get all menus - GET method
 export const getAllMenus = async (req: Request, res: Response) => {
   try {
@@ -84,15 +105,17 @@ export const createMenu = async (req: Request, res: Response) => {
     restaurantId,
     imageUrl,
     isActive,
-    isCustomizable,
-    productIds,
+    category,
+    sortOrder,
+    itemIds,
+    comboIds,
   } = req.body;
 
   // Validation
-  if (!name || !restaurantId) {
+  if (!name || !restaurantId || !category) {
     return apiResponse.validationError(
       res,
-      "Name and restaurant ID are required"
+      "Name, restaurant ID, and category are required"
     );
   }
 
@@ -111,52 +134,77 @@ export const createMenu = async (req: Request, res: Response) => {
     }
   }
 
-  // Convert isCustomizable to boolean
-  let isCustomizableBool: boolean = false; // Default value
-  if (isCustomizable !== undefined) {
-    if (typeof isCustomizable === "string") {
-      isCustomizableBool = isCustomizable.toLowerCase() === "true";
-    } else if (typeof isCustomizable === "boolean") {
-      isCustomizableBool = isCustomizable;
-    } else {
+  // Validate sortOrder
+  let validatedSortOrder: number = 0; // Default value
+  if (sortOrder !== undefined) {
+    const order = parseInt(sortOrder);
+    if (isNaN(order) || order < 0) {
       return apiResponse.validationError(
         res,
-        "isCustomizable must be a boolean or string 'true'/'false'"
+        "sortOrder must be a non-negative number"
       );
     }
+    validatedSortOrder = order;
   }
 
-  // Validate productIds is an array
-  let validatedProductIds: string[] = [];
-  if (productIds !== undefined) {
-    if (Array.isArray(productIds)) {
-      // If it's already an array, filter for strings
-      validatedProductIds = productIds.filter((id) => typeof id === "string");
-    } else if (typeof productIds === "string") {
-      // Try to parse as JSON first (for JSON strings in form-data)
+  // Validate itemIds is an array
+  let validatedItemIds: string[] = [];
+  if (itemIds !== undefined) {
+    if (Array.isArray(itemIds)) {
+      validatedItemIds = itemIds.filter((id) => typeof id === "string");
+    } else if (typeof itemIds === "string") {
       try {
-        const parsed = JSON.parse(productIds);
+        const parsed = JSON.parse(itemIds);
         if (Array.isArray(parsed)) {
-          validatedProductIds = parsed.filter((id) => typeof id === "string");
+          validatedItemIds = parsed.filter((id) => typeof id === "string");
         } else {
           return apiResponse.validationError(
             res,
-            "productIds JSON string must contain an array"
+            "itemIds JSON string must contain an array"
           );
         }
       } catch (jsonError) {
-        // If JSON parsing fails, try comma-separated string
-        if (productIds.includes(",")) {
-          validatedProductIds = productIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
-        } else if (productIds.trim() !== "") {
-          // Single item
-          validatedProductIds = [productIds.trim()];
+        if (itemIds.includes(",")) {
+          validatedItemIds = itemIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+        } else if (itemIds.trim() !== "") {
+          validatedItemIds = [itemIds.trim()];
         }
       }
     } else {
       return apiResponse.validationError(
         res,
-        "productIds must be an array of strings, a JSON string, or a comma-separated string"
+        "itemIds must be an array of strings, a JSON string, or a comma-separated string"
+      );
+    }
+  }
+
+  // Validate comboIds is an array
+  let validatedComboIds: string[] = [];
+  if (comboIds !== undefined) {
+    if (Array.isArray(comboIds)) {
+      validatedComboIds = comboIds.filter((id) => typeof id === "string");
+    } else if (typeof comboIds === "string") {
+      try {
+        const parsed = JSON.parse(comboIds);
+        if (Array.isArray(parsed)) {
+          validatedComboIds = parsed.filter((id) => typeof id === "string");
+        } else {
+          return apiResponse.validationError(
+            res,
+            "comboIds JSON string must contain an array"
+          );
+        }
+      } catch (jsonError) {
+        if (comboIds.includes(",")) {
+          validatedComboIds = comboIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+        } else if (comboIds.trim() !== "") {
+          validatedComboIds = [comboIds.trim()];
+        }
+      }
+    } else {
+      return apiResponse.validationError(
+        res,
+        "comboIds must be an array of strings, a JSON string, or a comma-separated string"
       );
     }
   }
@@ -168,8 +216,10 @@ export const createMenu = async (req: Request, res: Response) => {
       restaurantId,
       imageUrl,
       isActive: isActiveBool,
-      isCustomizable: isCustomizableBool,
-      productIds: validatedProductIds,
+      category,
+      sortOrder: validatedSortOrder,
+      itemIds: validatedItemIds,
+      comboIds: validatedComboIds,
     };
 
     const newMenu = await menuModel.createMenu(menuData);
@@ -183,7 +233,7 @@ export const createMenu = async (req: Request, res: Response) => {
 // Update a menu - PUT method, use req.params for ID, req.body for data
 export const updateMenu = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, description, imageUrl, isActive, isCustomizable, productIds } =
+  const { name, description, imageUrl, isActive, category, sortOrder, itemIds, comboIds } =
     req.body;
 
   if (!id) {
@@ -203,6 +253,10 @@ export const updateMenu = async (req: Request, res: Response) => {
     return apiResponse.validationError(res, "Image URL must be a string");
   }
 
+  if (category !== undefined && typeof category !== "string") {
+    return apiResponse.validationError(res, "Category must be a string");
+  }
+
   // Convert isActive to boolean if it's a string
   let isActiveBool: boolean | undefined = undefined;
   if (isActive !== undefined) {
@@ -218,52 +272,77 @@ export const updateMenu = async (req: Request, res: Response) => {
     }
   }
 
-  // Convert isCustomizable to boolean
-  let isCustomizableBool: boolean | undefined = undefined;
-  if (isCustomizable !== undefined) {
-    if (typeof isCustomizable === "string") {
-      isCustomizableBool = isCustomizable.toLowerCase() === "true";
-    } else if (typeof isCustomizable === "boolean") {
-      isCustomizableBool = isCustomizable;
-    } else {
+  // Validate sortOrder
+  let validatedSortOrder: number | undefined = undefined;
+  if (sortOrder !== undefined) {
+    const order = parseInt(sortOrder);
+    if (isNaN(order) || order < 0) {
       return apiResponse.validationError(
         res,
-        "isCustomizable must be a boolean or string 'true'/'false'"
+        "sortOrder must be a non-negative number"
       );
     }
+    validatedSortOrder = order;
   }
 
-  // Validate productIds is an array
-  let validatedProductIds: string[] | undefined = undefined;
-  if (productIds !== undefined) {
-    if (Array.isArray(productIds)) {
-      // If it's already an array, filter for strings
-      validatedProductIds = productIds.filter((id) => typeof id === "string");
-    } else if (typeof productIds === "string") {
-      // Try to parse as JSON first (for JSON strings in form-data)
+  // Validate itemIds is an array
+  let validatedItemIds: string[] | undefined = undefined;
+  if (itemIds !== undefined) {
+    if (Array.isArray(itemIds)) {
+      validatedItemIds = itemIds.filter((id) => typeof id === "string");
+    } else if (typeof itemIds === "string") {
       try {
-        const parsed = JSON.parse(productIds);
+        const parsed = JSON.parse(itemIds);
         if (Array.isArray(parsed)) {
-          validatedProductIds = parsed.filter((id) => typeof id === "string");
+          validatedItemIds = parsed.filter((id) => typeof id === "string");
         } else {
           return apiResponse.validationError(
             res,
-            "productIds JSON string must contain an array"
+            "itemIds JSON string must contain an array"
           );
         }
       } catch (jsonError) {
-        // If JSON parsing fails, try comma-separated string
-        if (productIds.includes(",")) {
-          validatedProductIds = productIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
-        } else if (productIds.trim() !== "") {
-          // Single item
-          validatedProductIds = [productIds.trim()];
+        if (itemIds.includes(",")) {
+          validatedItemIds = itemIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+        } else if (itemIds.trim() !== "") {
+          validatedItemIds = [itemIds.trim()];
         }
       }
     } else {
       return apiResponse.validationError(
         res,
-        "productIds must be an array of strings, a JSON string, or a comma-separated string"
+        "itemIds must be an array of strings, a JSON string, or a comma-separated string"
+      );
+    }
+  }
+
+  // Validate comboIds is an array
+  let validatedComboIds: string[] | undefined = undefined;
+  if (comboIds !== undefined) {
+    if (Array.isArray(comboIds)) {
+      validatedComboIds = comboIds.filter((id) => typeof id === "string");
+    } else if (typeof comboIds === "string") {
+      try {
+        const parsed = JSON.parse(comboIds);
+        if (Array.isArray(parsed)) {
+          validatedComboIds = parsed.filter((id) => typeof id === "string");
+        } else {
+          return apiResponse.validationError(
+            res,
+            "comboIds JSON string must contain an array"
+          );
+        }
+      } catch (jsonError) {
+        if (comboIds.includes(",")) {
+          validatedComboIds = comboIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+        } else if (comboIds.trim() !== "") {
+          validatedComboIds = [comboIds.trim()];
+        }
+      }
+    } else {
+      return apiResponse.validationError(
+        res,
+        "comboIds must be an array of strings, a JSON string, or a comma-separated string"
       );
     }
   }
@@ -275,10 +354,10 @@ export const updateMenu = async (req: Request, res: Response) => {
     if (description !== undefined) updates.description = description;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
     if (isActiveBool !== undefined) updates.isActive = isActiveBool;
-    if (isCustomizableBool !== undefined)
-      updates.isCustomizable = isCustomizableBool;
-    if (validatedProductIds !== undefined)
-      updates.productIds = validatedProductIds;
+    if (category !== undefined) updates.category = category;
+    if (validatedSortOrder !== undefined) updates.sortOrder = validatedSortOrder;
+    if (validatedItemIds !== undefined) updates.itemIds = validatedItemIds;
+    if (validatedComboIds !== undefined) updates.comboIds = validatedComboIds;
 
     const updatedMenu = await menuModel.updateMenu(id, updates);
     if (!updatedMenu) {
@@ -393,5 +472,56 @@ export const removeItemFromMenu = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error removing item from menu:", error);
     return apiResponse.internalError(res, "Failed to remove item from menu");
+  }
+};
+
+// Add combo to menu - POST method, use req.params for menuId, req.body for comboId
+export const addComboToMenu = async (req: Request, res: Response) => {
+  const { menuId } = req.params;
+  const { comboId } = req.body;
+
+  if (!menuId || !comboId) {
+    return apiResponse.validationError(res, "Menu ID and Combo ID are required");
+  }
+
+  try {
+    const updatedMenu = await menuModel.addComboToMenu(menuId, comboId);
+    if (!updatedMenu) {
+      return apiResponse.notFound(res, "Menu not found");
+    }
+
+    return apiResponse.success(
+      res,
+      updatedMenu,
+      "Combo added to menu successfully"
+    );
+  } catch (error) {
+    console.error("Error adding combo to menu:", error);
+    return apiResponse.internalError(res, "Failed to add combo to menu");
+  }
+};
+
+// Remove combo from menu - DELETE method, use req.params for menuId and comboId
+export const removeComboFromMenu = async (req: Request, res: Response) => {
+  const { menuId, comboId } = req.params;
+
+  if (!menuId || !comboId) {
+    return apiResponse.validationError(res, "Menu ID and Combo ID are required");
+  }
+
+  try {
+    const updatedMenu = await menuModel.removeComboFromMenu(menuId, comboId);
+    if (!updatedMenu) {
+      return apiResponse.notFound(res, "Menu not found");
+    }
+
+    return apiResponse.success(
+      res,
+      updatedMenu,
+      "Combo removed from menu successfully"
+    );
+  } catch (error) {
+    console.error("Error removing combo from menu:", error);
+    return apiResponse.internalError(res, "Failed to remove combo from menu");
   }
 };

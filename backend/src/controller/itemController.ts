@@ -41,7 +41,7 @@ export const getItemsByMenuId = async (req: Request, res: Response) => {
 
     // Fetch all items by their IDs
     const items = await Promise.all(
-      menu.productIds.map(async (itemId) => {
+      menu.itemIds.map(async (itemId) => {
         return await itemModel.findItemById(itemId);
       })
     );
@@ -75,7 +75,7 @@ export const getAvailableItemsByMenuId = async (
 
     // Fetch all items by their IDs
     const items = await Promise.all(
-      menu.productIds.map(async (itemId) => {
+      menu.itemIds.map(async (itemId) => {
         return await itemModel.findItemById(itemId);
       })
     );
@@ -125,7 +125,7 @@ export const getItemsByRestaurantId = async (req: Request, res: Response) => {
     const menus = await menuModel.findMenusByRestaurantId(restaurantId);
 
     // Get all unique item IDs from all menus
-    const allItemIds = [...new Set(menus.flatMap((menu) => menu.productIds))];
+    const allItemIds = [...new Set(menus.flatMap((menu) => menu.itemIds))];
 
     // Fetch all items by their IDs
     const items = await Promise.all(

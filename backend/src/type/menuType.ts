@@ -5,8 +5,10 @@ export type Menu = {
   restaurantId: string;
   imageUrl?: string;
   isActive: boolean;
-  isCustomizable: boolean;
-  productIds: string[]; // Array of item IDs in this menu
+  category: string; // e.g., "Lunch", "Dinner", "Breakfast", "All Day"
+  sortOrder: number; // For ordering menus on display
+  itemIds: string[]; // Array of individual item IDs
+  comboIds: string[]; // Array of combo IDs
   createdAt: Date;
   updatedAt: Date;
 };

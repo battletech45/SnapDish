@@ -1,0 +1,1233 @@
+{
+  "info": {
+    "name": "SnapDish API",
+    "description": "Complete restaurant management system API with items, combos, menus, and restaurants",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "restaurantId",
+      "value": "restaurant123",
+      "type": "string"
+    },
+    {
+      "key": "menuId",
+      "value": "menu123",
+      "type": "string"
+    },
+    {
+      "key": "comboId",
+      "value": "combo123",
+      "type": "string"
+    },
+    {
+      "key": "itemId",
+      "value": "item123",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Combos",
+      "description": "Meal deals/bundles (e.g., '2 medium pizza + fries + cola')",
+      "item": [
+        {
+          "name": "Create Combo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Pizza Combo",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "1 Medium Pizza + Fries + Cola",
+                  "type": "text"
+                },
+                {
+                  "key": "restaurantId",
+                  "value": "{{restaurantId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/pizza-combo.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "isCustomizable",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "productIds",
+                  "value": "[\"pizza1\", \"fries1\", \"cola1\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "discountPercentage",
+                  "value": "15",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/combo",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo"]
+            }
+          }
+        },
+        {
+          "name": "Get All Combos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo"]
+            }
+          }
+        },
+        {
+          "name": "Get Combo by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo/{{comboId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "{{comboId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Combos by Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Combos by Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo/restaurant/{{restaurantId}}/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "restaurant", "{{restaurantId}}", "active"]
+            }
+          }
+        },
+        {
+          "name": "Update Combo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Pizza Combo",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "1 Large Pizza + Fries + Cola + Garlic Bread",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/updated-pizza-combo.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "isCustomizable",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "productIds",
+                  "value": "[\"pizza1\", \"fries1\", \"cola1\", \"garlic_bread1\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "discountPercentage",
+                  "value": "20",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/combo/{{comboId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "{{comboId}}"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Combo Active Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo/{{comboId}}/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "{{comboId}}", "toggle"]
+            }
+          }
+        },
+        {
+          "name": "Add Item to Combo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "itemId",
+                  "value": "garlic_bread1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/combo/{{comboId}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "{{comboId}}", "items"]
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Combo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo/{{comboId}}/items/garlic_bread1",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "{{comboId}}", "items", "garlic_bread1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Combo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/combo/{{comboId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["combo", "{{comboId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Menus",
+      "description": "Organizational categories (e.g., 'Lunch Menu', 'Dinner Menu')",
+      "item": [
+        {
+          "name": "Create Menu",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Lunch Menu",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Our delicious lunch offerings",
+                  "type": "text"
+                },
+                {
+                  "key": "restaurantId",
+                  "value": "{{restaurantId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/lunch-menu.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Lunch",
+                  "type": "text"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "itemIds",
+                  "value": "[\"pizza1\", \"burger1\", \"salad1\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "comboIds",
+                  "value": "[\"combo123\", \"combo456\"]",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu"]
+            }
+          }
+        },
+        {
+          "name": "Get All Menus",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu"]
+            }
+          }
+        },
+        {
+          "name": "Get Menu by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Menus by Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Menus by Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/restaurant/{{restaurantId}}/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "restaurant", "{{restaurantId}}", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Menus by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/restaurant/{{restaurantId}}/category/Lunch",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "menu",
+                "restaurant",
+                "{{restaurantId}}",
+                "category",
+                "Lunch"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Menu",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Lunch Menu",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Our updated lunch offerings",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/updated-lunch-menu.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Lunch",
+                  "type": "text"
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "2",
+                  "type": "text"
+                },
+                {
+                  "key": "itemIds",
+                  "value": "[\"pizza1\", \"burger1\", \"salad1\", \"pasta1\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "comboIds",
+                  "value": "[\"combo123\", \"combo456\", \"combo789\"]",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Menu Active Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}", "toggle"]
+            }
+          }
+        },
+        {
+          "name": "Add Item to Menu",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "itemId",
+                  "value": "pasta1",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}", "items"]
+            }
+          }
+        },
+        {
+          "name": "Remove Item from Menu",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}/items/pasta1",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}", "items", "pasta1"]
+            }
+          }
+        },
+        {
+          "name": "Add Combo to Menu",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "comboId",
+                  "value": "combo789",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}/combos",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}", "combos"]
+            }
+          }
+        },
+        {
+          "name": "Remove Combo from Menu",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}/combos/combo789",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}", "combos", "combo789"]
+            }
+          }
+        },
+        {
+          "name": "Delete Menu",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/menu/{{menuId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["menu", "{{menuId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Items",
+      "description": "Individual products (e.g., 'Margherita Pizza', 'French Fries')",
+      "item": [
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Margherita Pizza",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Classic tomato sauce with mozzarella cheese",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "15.99",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Pizza",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/margherita.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "isSingleSize",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "sizes",
+                  "value": "[{\"size\": \"Small\", \"price\": 12.99}, {\"size\": \"Medium\", \"price\": 15.99}, {\"size\": \"Large\", \"price\": 18.99}]",
+                  "type": "text"
+                },
+                {
+                  "key": "isCustomizable",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "customizations",
+                  "value": "[{\"name\": \"Extra Cheese\", \"price\": 2.00}, {\"name\": \"Pepperoni\", \"price\": 3.00}]",
+                  "type": "text"
+                },
+                {
+                  "key": "restaurantId",
+                  "value": "{{restaurantId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "isShared",
+                  "value": "false",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/item",
+              "host": ["{{baseUrl}}"],
+              "path": ["item"]
+            }
+          }
+        },
+        {
+          "name": "Get All Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item",
+              "host": ["{{baseUrl}}"],
+              "path": ["item"]
+            }
+          }
+        },
+        {
+          "name": "Get Item by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Items by Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Items by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/category/Pizza",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "category", "Pizza"]
+            }
+          }
+        },
+        {
+          "name": "Update Item",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Margherita Pizza",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated classic tomato sauce with mozzarella cheese",
+                  "type": "text"
+                },
+                {
+                  "key": "price",
+                  "value": "16.99",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "Pizza",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/updated-margherita.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isAvailable",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "isSingleSize",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "sizes",
+                  "value": "[{\"size\": \"Small\", \"price\": 13.99}, {\"size\": \"Medium\", \"price\": 16.99}, {\"size\": \"Large\", \"price\": 19.99}]",
+                  "type": "text"
+                },
+                {
+                  "key": "isCustomizable",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "customizations",
+                  "value": "[{\"name\": \"Extra Cheese\", \"price\": 2.50}, {\"name\": \"Pepperoni\", \"price\": 3.50}]",
+                  "type": "text"
+                },
+                {
+                  "key": "isShared",
+                  "value": "false",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/item/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Item",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "{{itemId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Restaurants",
+      "description": "Restaurant management",
+      "item": [
+        {
+          "name": "Create Restaurant",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Pizza Palace",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "The best pizza in town",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "123 Main St, City, State 12345",
+                  "type": "text"
+                },
+                {
+                  "key": "phoneNumber",
+                  "value": "+1-555-123-4567",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "info@pizzapalace.com",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/pizza-palace.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "ownerId",
+                  "value": "user123",
+                  "type": "text"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/restaurant",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant"]
+            }
+          }
+        },
+        {
+          "name": "Get All Restaurants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant"]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurant by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurants by Owner",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/owner/user123",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "owner", "user123"]
+            }
+          }
+        },
+        {
+          "name": "Update Restaurant",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Pizza Palace",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "The updated best pizza in town",
+                  "type": "text"
+                },
+                {
+                  "key": "address",
+                  "value": "456 New St, City, State 12345",
+                  "type": "text"
+                },
+                {
+                  "key": "phoneNumber",
+                  "value": "+1-555-987-6543",
+                  "type": "text"
+                },
+                {
+                  "key": "email",
+                  "value": "info@updatedpizzapalace.com",
+                  "type": "text"
+                },
+                {
+                  "key": "imageUrl",
+                  "value": "https://example.com/updated-pizza-palace.jpg",
+                  "type": "text"
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Restaurant Active Status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/{{restaurantId}}/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "{{restaurantId}}", "toggle"]
+            }
+          }
+        },
+        {
+          "name": "Delete Restaurant",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "{{restaurantId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "description": "User authentication and authorization",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "user@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "value": "John Doe",
+                  "type": "text"
+                },
+                {
+                  "key": "role",
+                  "value": "admin",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "user@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "password123",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workflow Examples",
+      "description": "Complete workflow examples for common use cases",
+      "item": [
+        {
+          "name": "Complete Restaurant Setup",
+          "description": "Complete workflow to set up a restaurant with items, combos, and menus",
+          "item": [
+            {
+              "name": "1. Create Restaurant",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Pizza Palace",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "The best pizza in town",
+                      "type": "text"
+                    },
+                    {
+                      "key": "address",
+                      "value": "123 Main St, City, State 12345",
+                      "type": "text"
+                    },
+                    {
+                      "key": "phoneNumber",
+                      "value": "+1-555-123-4567",
+                      "type": "text"
+                    },
+                    {
+                      "key": "email",
+                      "value": "info@pizzapalace.com",
+                      "type": "text"
+                    },
+                    {
+                      "key": "ownerId",
+                      "value": "user123",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isActive",
+                      "value": "true",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/restaurant",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["restaurant"]
+                }
+              }
+            },
+            {
+              "name": "2. Create Items",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Margherita Pizza",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Classic tomato sauce with mozzarella cheese",
+                      "type": "text"
+                    },
+                    {
+                      "key": "price",
+                      "value": "15.99",
+                      "type": "text"
+                    },
+                    {
+                      "key": "category",
+                      "value": "Pizza",
+                      "type": "text"
+                    },
+                    {
+                      "key": "restaurantId",
+                      "value": "{{restaurantId}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isAvailable",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isSingleSize",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isCustomizable",
+                      "value": "true",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/item",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["item"]
+                }
+              }
+            },
+            {
+              "name": "3. Create Combo",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Pizza Combo",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "1 Medium Pizza + Fries + Cola",
+                      "type": "text"
+                    },
+                    {
+                      "key": "restaurantId",
+                      "value": "{{restaurantId}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "productIds",
+                      "value": "[\"pizza1\", \"fries1\", \"cola1\"]",
+                      "type": "text"
+                    },
+                    {
+                      "key": "discountPercentage",
+                      "value": "15",
+                      "type": "text"
+                    },
+                    {
+                      "key": "isCustomizable",
+                      "value": "true",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/combo",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["combo"]
+                }
+              }
+            },
+            {
+              "name": "4. Create Menu",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "Lunch Menu",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Our lunch offerings",
+                      "type": "text"
+                    },
+                    {
+                      "key": "restaurantId",
+                      "value": "{{restaurantId}}",
+                      "type": "text"
+                    },
+                    {
+                      "key": "category",
+                      "value": "Lunch",
+                      "type": "text"
+                    },
+                    {
+                      "key": "sortOrder",
+                      "value": "1",
+                      "type": "text"
+                    },
+                    {
+                      "key": "itemIds",
+                      "value": "[\"pizza1\", \"burger1\"]",
+                      "type": "text"
+                    },
+                    {
+                      "key": "comboIds",
+                      "value": "[\"combo123\"]",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/menu",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["menu"]
+                }
+              }
+            },
+            {
+              "name": "5. View Complete Menu Structure",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/menu/restaurant/{{restaurantId}}/active",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["menu", "restaurant", "{{restaurantId}}", "active"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
