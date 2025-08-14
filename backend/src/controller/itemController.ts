@@ -3,6 +3,7 @@ import { Item } from "../type/itemType";
 import * as itemModel from "../model/itemModel";
 import * as menuModel from "../model/menuModel";
 import { apiResponse } from "../util/apiResponse";
+import { bulkUpdateResourceStock } from "../model/resourceModel";
 
 // Get item by ID - GET method, use req.params for ID
 export const getItemById = async (req: Request, res: Response) => {
@@ -525,5 +526,30 @@ export const toggleItemAvailability = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error toggling item availability:", error);
     return apiResponse.internalError(res, "Failed to toggle item availability");
+  }
+};
+
+// Add this function to handle resource consumption when items are ordered
+export const consumeItemResources = async (
+  itemId: string,
+  quantity: number = 1
+): Promise<boolean> => {
+  try {
+    const item = await itemModel.findItemById(itemId);
+    if (!item || !item.consumingResources) {
+      return true; // No resources to consume
+    }
+
+    const updates = item.consumingResources.map((consumption) => ({
+      resourceId: consumption.resourceId,
+      quantity: consumption.quantity * quantity,
+      operation: "subtract" as const,
+      reason: `Item consumption: ${item.name}`,
+    }));
+
+    return await bulkUpdateResourceStock(updates);
+  } catch (error) {
+    console.error("Error consuming item resources:", error);
+    return false;
   }
 };

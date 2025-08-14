@@ -608,6 +608,16 @@
                   "key": "isShared",
                   "value": "false",
                   "type": "text"
+                },
+                {
+                  "key": "sharedWithRestaurants",
+                  "value": "[\"restaurant456\", \"restaurant789\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "consumingResources",
+                  "value": "[{\"resourceId\": \"flour123\", \"quantity\": 0.5}, {\"resourceId\": \"cheese123\", \"quantity\": 0.2}]",
+                  "type": "text"
                 }
               ]
             },
@@ -643,6 +653,30 @@
           }
         },
         {
+          "name": "Get Items by Menu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/menu/{{menuId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "menu", "{{menuId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Available Items by Menu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/menu/{{menuId}}/available",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "menu", "{{menuId}}", "available"]
+            }
+          }
+        },
+        {
           "name": "Get Items by Restaurant",
           "request": {
             "method": "GET",
@@ -660,9 +694,15 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/item/category/Pizza",
+              "raw": "{{baseUrl}}/item/category?category=Pizza",
               "host": ["{{baseUrl}}"],
-              "path": ["item", "category", "Pizza"]
+              "path": ["item", "category"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "Pizza"
+                }
+              ]
             }
           }
         },
@@ -728,6 +768,16 @@
                   "key": "isShared",
                   "value": "false",
                   "type": "text"
+                },
+                {
+                  "key": "sharedWithRestaurants",
+                  "value": "[\"restaurant456\", \"restaurant789\"]",
+                  "type": "text"
+                },
+                {
+                  "key": "consumingResources",
+                  "value": "[{\"resourceId\": \"flour123\", \"quantity\": 0.5}, {\"resourceId\": \"cheese123\", \"quantity\": 0.2}]",
+                  "type": "text"
                 }
               ]
             },
@@ -735,6 +785,18 @@
               "raw": "{{baseUrl}}/item/{{itemId}}",
               "host": ["{{baseUrl}}"],
               "path": ["item", "{{itemId}}"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Item Availability",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/item/{{itemId}}/toggle",
+              "host": ["{{baseUrl}}"],
+              "path": ["item", "{{itemId}}", "toggle"]
             }
           }
         },
@@ -826,6 +888,62 @@
           }
         },
         {
+          "name": "Get All Active Restaurants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "active"]
+            }
+          }
+        },
+        {
+          "name": "Search Restaurants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/search?searchTerm=pizza&limit=10&offset=0",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "search"],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "pizza"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurants with Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/stats?ownerId=user123",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "stats"],
+              "query": [
+                {
+                  "key": "ownerId",
+                  "value": "user123"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Get Restaurant by ID",
           "request": {
             "method": "GET",
@@ -846,6 +964,66 @@
               "raw": "{{baseUrl}}/restaurant/owner/user123",
               "host": ["{{baseUrl}}"],
               "path": ["restaurant", "owner", "user123"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Restaurants by Owner",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/owner/user123/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "owner", "user123", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurants Count by Owner",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/owner/user123/count",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "owner", "user123", "count"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Restaurants Count by Owner",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/owner/user123/active-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "owner", "user123", "active-count"]
+            }
+          }
+        },
+        {
+          "name": "Get Restaurants by Name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/name/Pizza Palace",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "name", "Pizza Palace"]
+            }
+          }
+        },
+        {
+          "name": "Check Restaurant Ownership",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/{{restaurantId}}/owner/user123",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "{{restaurantId}}", "owner", "user123"]
             }
           }
         },
@@ -898,6 +1076,27 @@
               "raw": "{{baseUrl}}/restaurant/{{restaurantId}}",
               "host": ["{{baseUrl}}"],
               "path": ["restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Bulk Update Restaurants",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"restaurantIds\": [\"restaurant123\", \"restaurant456\"],\n  \"updates\": {\n    \"isActive\": false,\n    \"description\": \"Updated description for all restaurants\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/restaurant/bulk",
+              "host": ["{{baseUrl}}"],
+              "path": ["restaurant", "bulk"]
             }
           }
         },
@@ -998,234 +1197,281 @@
       ]
     },
     {
-      "name": "Workflow Examples",
-      "description": "Complete workflow examples for common use cases",
+      "name": "Resources",
+      "description": "Resource/ingredient management for restaurants",
       "item": [
         {
-          "name": "Complete Restaurant Setup",
-          "description": "Complete workflow to set up a restaurant with items, combos, and menus",
-          "item": [
-            {
-              "name": "1. Create Restaurant",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [
-                    {
-                      "key": "name",
-                      "value": "Pizza Palace",
-                      "type": "text"
-                    },
-                    {
-                      "key": "description",
-                      "value": "The best pizza in town",
-                      "type": "text"
-                    },
-                    {
-                      "key": "address",
-                      "value": "123 Main St, City, State 12345",
-                      "type": "text"
-                    },
-                    {
-                      "key": "phoneNumber",
-                      "value": "+1-555-123-4567",
-                      "type": "text"
-                    },
-                    {
-                      "key": "email",
-                      "value": "info@pizzapalace.com",
-                      "type": "text"
-                    },
-                    {
-                      "key": "ownerId",
-                      "value": "user123",
-                      "type": "text"
-                    },
-                    {
-                      "key": "isActive",
-                      "value": "true",
-                      "type": "text"
-                    }
-                  ]
+          "name": "Create Resource",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Bottled Water",
+                  "type": "text"
                 },
-                "url": {
-                  "raw": "{{baseUrl}}/restaurant",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["restaurant"]
-                }
-              }
-            },
-            {
-              "name": "2. Create Items",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [
-                    {
-                      "key": "name",
-                      "value": "Margherita Pizza",
-                      "type": "text"
-                    },
-                    {
-                      "key": "description",
-                      "value": "Classic tomato sauce with mozzarella cheese",
-                      "type": "text"
-                    },
-                    {
-                      "key": "price",
-                      "value": "15.99",
-                      "type": "text"
-                    },
-                    {
-                      "key": "category",
-                      "value": "Pizza",
-                      "type": "text"
-                    },
-                    {
-                      "key": "restaurantId",
-                      "value": "{{restaurantId}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "isAvailable",
-                      "value": "true",
-                      "type": "text"
-                    },
-                    {
-                      "key": "isSingleSize",
-                      "value": "true",
-                      "type": "text"
-                    },
-                    {
-                      "key": "isCustomizable",
-                      "value": "true",
-                      "type": "text"
-                    }
-                  ]
+                {
+                  "key": "description",
+                  "value": "500ml bottled water",
+                  "type": "text"
                 },
-                "url": {
-                  "raw": "{{baseUrl}}/item",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["item"]
-                }
-              }
-            },
-            {
-              "name": "3. Create Combo",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [
-                    {
-                      "key": "name",
-                      "value": "Pizza Combo",
-                      "type": "text"
-                    },
-                    {
-                      "key": "description",
-                      "value": "1 Medium Pizza + Fries + Cola",
-                      "type": "text"
-                    },
-                    {
-                      "key": "restaurantId",
-                      "value": "{{restaurantId}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "productIds",
-                      "value": "[\"pizza1\", \"fries1\", \"cola1\"]",
-                      "type": "text"
-                    },
-                    {
-                      "key": "discountPercentage",
-                      "value": "15",
-                      "type": "text"
-                    },
-                    {
-                      "key": "isCustomizable",
-                      "value": "true",
-                      "type": "text"
-                    }
-                  ]
+                {
+                  "key": "unit",
+                  "value": "pcs",
+                  "type": "text"
                 },
-                "url": {
-                  "raw": "{{baseUrl}}/combo",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["combo"]
-                }
-              }
-            },
-            {
-              "name": "4. Create Menu",
-              "request": {
-                "method": "POST",
-                "header": [],
-                "body": {
-                  "mode": "formdata",
-                  "formdata": [
-                    {
-                      "key": "name",
-                      "value": "Lunch Menu",
-                      "type": "text"
-                    },
-                    {
-                      "key": "description",
-                      "value": "Our lunch offerings",
-                      "type": "text"
-                    },
-                    {
-                      "key": "restaurantId",
-                      "value": "{{restaurantId}}",
-                      "type": "text"
-                    },
-                    {
-                      "key": "category",
-                      "value": "Lunch",
-                      "type": "text"
-                    },
-                    {
-                      "key": "sortOrder",
-                      "value": "1",
-                      "type": "text"
-                    },
-                    {
-                      "key": "itemIds",
-                      "value": "[\"pizza1\", \"burger1\"]",
-                      "type": "text"
-                    },
-                    {
-                      "key": "comboIds",
-                      "value": "[\"combo123\"]",
-                      "type": "text"
-                    }
-                  ]
+                {
+                  "key": "currentStock",
+                  "value": "100",
+                  "type": "text"
                 },
-                "url": {
-                  "raw": "{{baseUrl}}/menu",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["menu"]
+                {
+                  "key": "minimumStock",
+                  "value": "20",
+                  "type": "text"
+                },
+                {
+                  "key": "costPerUnit",
+                  "value": "0.50",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "beverages",
+                  "type": "text"
+                },
+                {
+                  "key": "restaurantId",
+                  "value": "{{restaurantId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "supplier",
+                  "value": "Water Supplier Co.",
+                  "type": "text"
                 }
-              }
+              ]
             },
-            {
-              "name": "5. View Complete Menu Structure",
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseUrl}}/menu/restaurant/{{restaurantId}}/active",
-                  "host": ["{{baseUrl}}"],
-                  "path": ["menu", "restaurant", "{{restaurantId}}", "active"]
-                }
-              }
+            "url": {
+              "raw": "{{baseUrl}}/resource",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource"]
             }
-          ]
+          }
+        },
+        {
+          "name": "Get Resource by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/resource123",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "resource123"]
+            }
+          }
+        },
+        {
+          "name": "Get Resources by Restaurant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/restaurant/{{restaurantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "restaurant", "{{restaurantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Resources by Restaurant and Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/restaurant/{{restaurantId}}?category=ingredients",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "restaurant", "{{restaurantId}}"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "ingredients"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Resources with Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/restaurant/{{restaurantId}}/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "restaurant", "{{restaurantId}}", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Low Stock Resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/restaurant/{{restaurantId}}/low-stock",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "resource",
+                "restaurant",
+                "{{restaurantId}}",
+                "low-stock"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Resource Stock History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/resource123/history?limit=50",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "resource123", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Resource",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Bottled Water",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated 500ml bottled water",
+                  "type": "text"
+                },
+                {
+                  "key": "unit",
+                  "value": "pcs",
+                  "type": "text"
+                },
+                {
+                  "key": "currentStock",
+                  "value": "150",
+                  "type": "text"
+                },
+                {
+                  "key": "minimumStock",
+                  "value": "25",
+                  "type": "text"
+                },
+                {
+                  "key": "costPerUnit",
+                  "value": "0.60",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "beverages",
+                  "type": "text"
+                },
+                {
+                  "key": "supplier",
+                  "value": "Updated Water Supplier Co.",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/resource/resource123",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "resource123"]
+            }
+          }
+        },
+        {
+          "name": "Update Resource Stock",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "quantity",
+                  "value": "50",
+                  "type": "text"
+                },
+                {
+                  "key": "operation",
+                  "value": "add",
+                  "type": "text"
+                },
+                {
+                  "key": "reason",
+                  "value": "restock",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/resource/resource123/stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "resource123", "stock"]
+            }
+          }
+        },
+        {
+          "name": "Bulk Update Resource Stock",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"updates\": [\n    {\n      \"resourceId\": \"resource123\",\n      \"quantity\": 50,\n      \"operation\": \"add\",\n      \"reason\": \"restock\"\n    },\n    {\n      \"resourceId\": \"resource456\",\n      \"quantity\": 30,\n      \"operation\": \"add\",\n      \"reason\": \"restock\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/resource/bulk-stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "bulk-stock"]
+            }
+          }
+        },
+        {
+          "name": "Delete Resource",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/resource/resource123",
+              "host": ["{{baseUrl}}"],
+              "path": ["resource", "resource123"]
+            }
+          }
         }
       ]
     }
