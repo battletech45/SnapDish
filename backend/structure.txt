@@ -1,0 +1,91 @@
+/* franchises/
+#   {franchiseId}/
+#     name: "Pizza Palace Franchise"
+#     ownerId: "user123"
+#     isActive: true
+#     
+#     # SHARED ACROSS ALL RESTAURANTS
+#     items/
+#       {itemId}/
+#         name: "Margherita Pizza"
+#         basePrice: 15.99
+#         category: "Pizza"
+#         isFranchiseItem: true
+#         isActive: true
+#     
+#     menus/
+#       {menuId}/
+#         name: "Lunch Menu"
+#         isFranchiseMenu: true
+#         isActive: true
+#     
+#     combos/
+#       {comboId}/
+#         name: "Pizza + Drink"
+#         isFranchiseCombo: true
+#         isActive: true
+#     
+#     # EXTRAS - Category-specific add-ons (shared but locally overridable)
+#     extras/
+#       {extraId}/
+#         name: "Extra Cheese"
+#         basePrice: 2.50
+#         category: "Pizza"  # Which item category this extra applies to
+#         itemId: "item123"  # Reference to the base item from items collection
+#         isFranchiseExtra: true
+#         isActive: true
+#         maxQuantity: 5     # Maximum number of this extra that can be added
+#         isRequired: false  # Whether this extra is required for the item
+#     
+#     # RESTAURANT-SPECIFIC
+#     restaurants/
+#       {restaurantId}/
+#         name: "Pizza Palace Downtown"
+#         address: "123 Main St"
+#         managerId: "user456"
+#         isActive: true
+#         
+#         # LOCAL CUSTOMIZATIONS
+#         localItems/
+#           {localItemId}/
+#             name: "Downtown Special Pizza"
+#             price: 18.99
+#             isLocalItem: true
+#         
+#         localMenus/
+#           {localMenuId}/
+#             name: "Downtown Happy Hour"
+#             isLocalMenu: true
+#         
+#         # LOCAL EXTRAS (restaurant-specific add-ons)
+#         localExtras/
+#           {localExtraId}/
+#             name: "Downtown Special Sauce"
+#             price: 1.50
+#             category: "Pizza"
+#             isLocalExtra: true
+#             isActive: true
+#             maxQuantity: 3
+#         
+#         # UNIQUE PER RESTAURANT
+#         resources/
+#           {resourceId}/
+#             name: "Flour"
+#             currentStock: 50
+#             supplier: "Local Supplier"
+#             costPerUnit: 2.50
+#         
+#         # PRICE OVERRIDES FOR FRANCHISE ITEMS
+#         itemPricing/
+#           {itemId}/
+#             franchiseItemId: "item123"
+#             localPrice: 16.99  # Override base price
+#             isActive: true
+#         
+#         # PRICE OVERRIDES FOR FRANCHISE EXTRAS
+#         extraPricing/
+#           {extraId}/
+#             franchiseExtraId: "extra123"
+#             localPrice: 3.00  # Override base price for this extra
+#             isActive: true
+*/
