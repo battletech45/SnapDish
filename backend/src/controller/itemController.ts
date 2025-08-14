@@ -168,13 +168,16 @@ export const createItem = async (req: Request, res: Response) => {
     sizes,
     isCustomizable,
     customizations,
+    restaurantId,
+    isShared,
+    sharedWithRestaurants,
   } = req.body;
 
   // Validation
-  if (!name || !price || !category) {
+  if (!name || !price || !category || !restaurantId) {
     return apiResponse.validationError(
       res,
-      "Name, price, and category are required"
+      "Name, price, category, and restaurantId are required"
     );
   }
 
@@ -229,6 +232,21 @@ export const createItem = async (req: Request, res: Response) => {
     }
   }
 
+  // Convert isShared to boolean
+  let isSharedBool: boolean = false; // Default value
+  if (isShared !== undefined) {
+    if (typeof isShared === "string") {
+      isSharedBool = isShared.toLowerCase() === "true";
+    } else if (typeof isShared === "boolean") {
+      isSharedBool = isShared;
+    } else {
+      return apiResponse.validationError(
+        res,
+        "isShared must be a boolean or string 'true'/'false'"
+      );
+    }
+  }
+
   // Parse sizes if it's a JSON string
   let parsedSizes: { size: string; price: number }[] | undefined = undefined;
   if (sizes !== undefined) {
@@ -261,6 +279,23 @@ export const createItem = async (req: Request, res: Response) => {
     }
   }
 
+  // Parse sharedWithRestaurants if it's a JSON string
+  let parsedSharedWithRestaurants: string[] | undefined = undefined;
+  if (sharedWithRestaurants !== undefined) {
+    try {
+      if (typeof sharedWithRestaurants === "string") {
+        parsedSharedWithRestaurants = JSON.parse(sharedWithRestaurants);
+      } else if (Array.isArray(sharedWithRestaurants)) {
+        parsedSharedWithRestaurants = sharedWithRestaurants;
+      }
+    } catch (error) {
+      return apiResponse.validationError(
+        res,
+        "Invalid sharedWithRestaurants JSON format"
+      );
+    }
+  }
+
   try {
     const itemData: Omit<Item, "id" | "createdAt" | "updatedAt"> = {
       name,
@@ -271,6 +306,8 @@ export const createItem = async (req: Request, res: Response) => {
       isAvailable: isAvailableBool,
       isSingleSize: isSingleSizeBool,
       isCustomizable: isCustomizableBool,
+      restaurantId,
+      isShared: isSharedBool,
     };
 
     // Only add sizes if it's defined and NOT single size
@@ -281,6 +318,11 @@ export const createItem = async (req: Request, res: Response) => {
     // Only add customizations if it's defined and is customizable
     if (parsedCustomizations !== undefined && isCustomizableBool) {
       itemData.customizations = parsedCustomizations;
+    }
+
+    // Only add sharedWithRestaurants if it's defined and is shared
+    if (parsedSharedWithRestaurants !== undefined && isSharedBool) {
+      itemData.sharedWithRestaurants = parsedSharedWithRestaurants;
     }
 
     const newItem = await itemModel.createItem(itemData);
@@ -305,6 +347,9 @@ export const updateItem = async (req: Request, res: Response) => {
     sizes,
     isCustomizable,
     customizations,
+    restaurantId,
+    isShared,
+    sharedWithRestaurants,
   } = req.body;
 
   if (!id) {
@@ -336,6 +381,10 @@ export const updateItem = async (req: Request, res: Response) => {
 
   if (imageUrl !== undefined && typeof imageUrl !== "string") {
     return apiResponse.validationError(res, "Image URL must be a string");
+  }
+
+  if (restaurantId !== undefined && typeof restaurantId !== "string") {
+    return apiResponse.validationError(res, "Restaurant ID must be a string");
   }
 
   // Convert isAvailable to boolean if it's a string
@@ -383,6 +432,21 @@ export const updateItem = async (req: Request, res: Response) => {
     }
   }
 
+  // Convert isShared to boolean
+  let isSharedBool: boolean | undefined = undefined;
+  if (isShared !== undefined) {
+    if (typeof isShared === "string") {
+      isSharedBool = isShared.toLowerCase() === "true";
+    } else if (typeof isShared === "boolean") {
+      isSharedBool = isShared;
+    } else {
+      return apiResponse.validationError(
+        res,
+        "isShared must be a boolean or string 'true'/'false'"
+      );
+    }
+  }
+
   try {
     const updates: Partial<Omit<Item, "id" | "createdAt" | "updatedAt">> = {};
 
@@ -397,6 +461,10 @@ export const updateItem = async (req: Request, res: Response) => {
     if (isCustomizableBool !== undefined)
       updates.isCustomizable = isCustomizableBool;
     if (customizations !== undefined) updates.customizations = customizations;
+    if (restaurantId !== undefined) updates.restaurantId = restaurantId;
+    if (isSharedBool !== undefined) updates.isShared = isSharedBool;
+    if (sharedWithRestaurants !== undefined)
+      updates.sharedWithRestaurants = sharedWithRestaurants;
 
     const updatedItem = await itemModel.updateItem(id, updates);
     if (!updatedItem) {

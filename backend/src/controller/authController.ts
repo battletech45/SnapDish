@@ -41,6 +41,7 @@ export const googleLogin = async (req: Request, res: Response) => {
 
     const user = findUserByUid(uid);
     if (!user) {
+      const now = new Date();
       const newUser = createUser({
         uid,
         email,
@@ -48,6 +49,10 @@ export const googleLogin = async (req: Request, res: Response) => {
         photoURL,
         emailVerified,
         phoneNumber,
+        role: 'user', // Default role for new users
+        ownedRestaurants: [], // Empty array for new users
+        createdAt: now,
+        updatedAt: now,
       });
 
       // Log user registration
