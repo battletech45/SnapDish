@@ -1,91 +1,309 @@
-/* franchises/
-#   {franchiseId}/
-#     name: "Pizza Palace Franchise"
-#     ownerId: "user123"
-#     isActive: true
-#     
-#     # SHARED ACROSS ALL RESTAURANTS
-#     items/
-#       {itemId}/
-#         name: "Margherita Pizza"
-#         basePrice: 15.99
-#         category: "Pizza"
-#         isFranchiseItem: true
-#         isActive: true
-#     
-#     menus/
-#       {menuId}/
-#         name: "Lunch Menu"
-#         isFranchiseMenu: true
-#         isActive: true
-#     
-#     combos/
-#       {comboId}/
-#         name: "Pizza + Drink"
-#         isFranchiseCombo: true
-#         isActive: true
-#     
-#     # EXTRAS - Category-specific add-ons (shared but locally overridable)
-#     extras/
-#       {extraId}/
-#         name: "Extra Cheese"
-#         basePrice: 2.50
-#         category: "Pizza"  # Which item category this extra applies to
-#         itemId: "item123"  # Reference to the base item from items collection
-#         isFranchiseExtra: true
-#         isActive: true
-#         maxQuantity: 5     # Maximum number of this extra that can be added
-#         isRequired: false  # Whether this extra is required for the item
-#     
-#     # RESTAURANT-SPECIFIC
-#     restaurants/
-#       {restaurantId}/
-#         name: "Pizza Palace Downtown"
-#         address: "123 Main St"
-#         managerId: "user456"
-#         isActive: true
-#         
-#         # LOCAL CUSTOMIZATIONS
-#         localItems/
-#           {localItemId}/
-#             name: "Downtown Special Pizza"
-#             price: 18.99
-#             isLocalItem: true
-#         
-#         localMenus/
-#           {localMenuId}/
-#             name: "Downtown Happy Hour"
-#             isLocalMenu: true
-#         
-#         # LOCAL EXTRAS (restaurant-specific add-ons)
-#         localExtras/
-#           {localExtraId}/
-#             name: "Downtown Special Sauce"
-#             price: 1.50
-#             category: "Pizza"
-#             isLocalExtra: true
-#             isActive: true
-#             maxQuantity: 3
-#         
-#         # UNIQUE PER RESTAURANT
-#         resources/
-#           {resourceId}/
-#             name: "Flour"
-#             currentStock: 50
-#             supplier: "Local Supplier"
-#             costPerUnit: 2.50
-#         
-#         # PRICE OVERRIDES FOR FRANCHISE ITEMS
-#         itemPricing/
-#           {itemId}/
-#             franchiseItemId: "item123"
-#             localPrice: 16.99  # Override base price
-#             isActive: true
-#         
-#         # PRICE OVERRIDES FOR FRANCHISE EXTRAS
-#         extraPricing/
-#           {extraId}/
-#             franchiseExtraId: "extra123"
-#             localPrice: 3.00  # Override base price for this extra
-#             isActive: true
-*/
+{
+  "franchises": {
+    "franchise_001": {
+      "name": "Pizza Palace Franchise",
+      "ownerId": "user123",
+      "isActive": true,
+      "createdAt": "2025-01-15T10:00:00Z",
+      "updatedAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/items": {
+    "item_001": {
+      "name": "Margherita Pizza",
+      "basePrice": 15.99,
+      "category": "Pizza",
+      "description": "Classic pizza with tomato, mozzarella, and basil",
+      "isFranchiseItem": true,
+      "isActive": true,
+      "ingredients": ["tomato sauce", "mozzarella", "basil"],
+      "preparationTime": 12,
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "item_002": {
+      "name": "Pepperoni Pizza",
+      "basePrice": 17.99,
+      "category": "Pizza",
+      "description": "Pizza with pepperoni and mozzarella",
+      "isFranchiseItem": true,
+      "isActive": true,
+      "ingredients": ["tomato sauce", "mozzarella", "pepperoni"],
+      "preparationTime": 12,
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "item_003": {
+      "name": "Coca Cola",
+      "basePrice": 2.99,
+      "category": "Drinks",
+      "description": "Classic carbonated soft drink",
+      "isFranchiseItem": true,
+      "isActive": true,
+      "size": "330ml",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/menus": {
+    "menu_001": {
+      "name": "Lunch Menu",
+      "description": "Available from 11 AM to 3 PM",
+      "isFranchiseMenu": true,
+      "isActive": true,
+      "availableHours": {
+        "start": "11:00",
+        "end": "15:00"
+      },
+      "itemIds": ["item_001", "item_002", "item_003"],
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "menu_002": {
+      "name": "Dinner Menu",
+      "description": "Available from 5 PM to 11 PM",
+      "isFranchiseMenu": true,
+      "isActive": true,
+      "availableHours": {
+        "start": "17:00",
+        "end": "23:00"
+      },
+      "itemIds": ["item_001", "item_002"],
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/combos": {
+    "combo_001": {
+      "name": "Pizza + Drink",
+      "description": "Any pizza with a drink",
+      "basePrice": 18.99,
+      "discount": 1.99,
+      "isFranchiseCombo": true,
+      "isActive": true,
+      "items": [
+        {
+          "itemId": "item_001",
+          "quantity": 1,
+          "category": "Pizza"
+        },
+        {
+          "itemId": "item_003",
+          "quantity": 1,
+          "category": "Drinks"
+        }
+      ],
+      "validUntil": "2025-12-31T23:59:59Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/extras": {
+    "extra_001": {
+      "name": "Extra Cheese",
+      "basePrice": 2.50,
+      "category": "Pizza",
+      "itemId": "item_001",
+      "isFranchiseExtra": true,
+      "isActive": true,
+      "maxQuantity": 5,
+      "isRequired": false,
+      "description": "Additional mozzarella cheese",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "extra_002": {
+      "name": "Extra Pepperoni",
+      "basePrice": 3.00,
+      "category": "Pizza",
+      "itemId": "item_002",
+      "isFranchiseExtra": true,
+      "isActive": true,
+      "maxQuantity": 3,
+      "isRequired": false,
+      "description": "Additional pepperoni slices",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "extra_003": {
+      "name": "Mushrooms",
+      "basePrice": 2.00,
+      "category": "Pizza",
+      "itemId": "item_001",
+      "isFranchiseExtra": true,
+      "isActive": true,
+      "maxQuantity": 2,
+      "isRequired": false,
+      "description": "Fresh mushrooms",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants": {
+    "restaurant_001": {
+      "name": "Pizza Palace Downtown",
+      "address": "123 Main St",
+      "city": "New York",
+      "state": "NY",
+      "zipCode": "10001",
+      "phone": "+1-555-0123",
+      "managerId": "user456",
+      "isActive": true,
+      "openingHours": {
+        "monday": { "open": "10:00", "close": "23:00" },
+        "tuesday": { "open": "10:00", "close": "23:00" },
+        "wednesday": { "open": "10:00", "close": "23:00" },
+        "thursday": { "open": "10:00", "close": "23:00" },
+        "friday": { "open": "10:00", "close": "24:00" },
+        "saturday": { "open": "10:00", "close": "24:00" },
+        "sunday": { "open": "11:00", "close": "22:00" }
+      },
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "restaurant_002": {
+      "name": "Pizza Palace Uptown",
+      "address": "456 Broadway",
+      "city": "New York",
+      "state": "NY",
+      "zipCode": "10025",
+      "phone": "+1-555-0124",
+      "managerId": "user789",
+      "isActive": true,
+      "openingHours": {
+        "monday": { "open": "11:00", "close": "22:00" },
+        "tuesday": { "open": "11:00", "close": "22:00" },
+        "wednesday": { "open": "11:00", "close": "22:00" },
+        "thursday": { "open": "11:00", "close": "22:00" },
+        "friday": { "open": "11:00", "close": "23:00" },
+        "saturday": { "open": "11:00", "close": "23:00" },
+        "sunday": { "open": "12:00", "close": "21:00" }
+      },
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants/restaurant_001/localItems": {
+    "localItem_001": {
+      "name": "Downtown Special Pizza",
+      "price": 18.99,
+      "category": "Pizza",
+      "description": "Unique pizza with local ingredients",
+      "isLocalItem": true,
+      "isActive": true,
+      "ingredients": ["tomato sauce", "local cheese", "downtown herbs"],
+      "preparationTime": 15,
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "localItem_002": {
+      "name": "Manhattan Mule",
+      "price": 8.99,
+      "category": "Drinks",
+      "description": "Local specialty cocktail",
+      "isLocalItem": true,
+      "isActive": true,
+      "alcoholic": true,
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants/restaurant_001/localMenus": {
+    "localMenu_001": {
+      "name": "Downtown Happy Hour",
+      "description": "Special happy hour menu",
+      "isLocalMenu": true,
+      "isActive": true,
+      "availableHours": {
+        "start": "16:00",
+        "end": "18:00"
+      },
+      "availableDays": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+      "itemIds": ["localItem_001", "localItem_002"],
+      "discount": 20,
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants/restaurant_001/localExtras": {
+    "localExtra_001": {
+      "name": "Downtown Special Sauce",
+      "price": 1.50,
+      "category": "Pizza",
+      "isLocalExtra": true,
+      "isActive": true,
+      "maxQuantity": 3,
+      "isRequired": false,
+      "description": "Secret downtown sauce recipe",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "localExtra_002": {
+      "name": "Local Artisan Cheese",
+      "price": 4.00,
+      "category": "Pizza",
+      "isLocalExtra": true,
+      "isActive": true,
+      "maxQuantity": 2,
+      "isRequired": false,
+      "description": "Cheese from local artisan producer",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants/restaurant_001/resources": {
+    "resource_001": {
+      "name": "Flour",
+      "currentStock": 50,
+      "unit": "kg",
+      "supplier": "Local Supplier",
+      "costPerUnit": 2.50,
+      "minimumStock": 10,
+      "lastRestocked": "2025-01-10T14:00:00Z",
+      "expiryDate": "2025-03-15T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "resource_002": {
+      "name": "Mozzarella Cheese",
+      "currentStock": 25,
+      "unit": "kg",
+      "supplier": "Dairy Farm Co",
+      "costPerUnit": 8.50,
+      "minimumStock": 5,
+      "lastRestocked": "2025-01-12T09:00:00Z",
+      "expiryDate": "2025-01-25T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "resource_003": {
+      "name": "Tomato Sauce",
+      "currentStock": 30,
+      "unit": "liters",
+      "supplier": "Sauce Factory",
+      "costPerUnit": 3.25,
+      "minimumStock": 8,
+      "lastRestocked": "2025-01-08T11:00:00Z",
+      "expiryDate": "2025-02-20T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants/restaurant_001/itemPricing": {
+    "itemPricing_001": {
+      "franchiseItemId": "item_001",
+      "localPrice": 16.99,
+      "isActive": true,
+      "reason": "Local market adjustment",
+      "effectiveFrom": "2025-01-15T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "itemPricing_002": {
+      "franchiseItemId": "item_002",
+      "localPrice": 19.49,
+      "isActive": true,
+      "reason": "Premium location surcharge",
+      "effectiveFrom": "2025-01-15T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  },
+  "franchises/franchise_001/restaurants/restaurant_001/extraPricing": {
+    "extraPricing_001": {
+      "franchiseExtraId": "extra_001",
+      "localPrice": 3.00,
+      "isActive": true,
+      "reason": "Higher quality cheese",
+      "effectiveFrom": "2025-01-15T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    },
+    "extraPricing_002": {
+      "franchiseExtraId": "extra_002",
+      "localPrice": 3.50,
+      "isActive": true,
+      "reason": "Premium pepperoni",
+      "effectiveFrom": "2025-01-15T00:00:00Z",
+      "createdAt": "2025-01-15T10:00:00Z"
+    }
+  }
+}
