@@ -1,14 +1,18 @@
-export type ResourceUnit = "kg" | "g" | "l" | "ml" | "pcs" | "units" | "liters";
+export type ResourceUnit = "kg" | "g" | "l" | "ml" | "pcs" | "units";
 
 export type Resource = {
+  id: string;
   name: string;
-  currentStock: number;
+  description?: string;
   unit: ResourceUnit;
-  supplier: string;
-  costPerUnit: number;
-  minimumStock: number;
+  currentStock: number;
+  minimumStock: number; // Alert threshold
+  costPerUnit: number; // Cost per unit for inventory tracking
+  category: string; // e.g., 'beverages', 'ingredients', 'packaging'
+  restaurantId: string; // Which restaurant owns this resource
+  isActive: boolean;
   lastRestocked?: Date;
-  expiryDate?: Date;
+  supplier?: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -23,6 +27,6 @@ export type ResourceStockUpdate = {
   resourceId: string;
   quantity: number;
   operation: "add" | "subtract" | "set";
-  reason?: string;
+  reason?: string; // e.g., 'restock', 'consumption', 'waste'
   date: Date;
 };
