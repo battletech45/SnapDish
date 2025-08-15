@@ -1,6 +1,7 @@
 {
   "franchises": {
     "franchise_001": {
+      "id": "franchise_001",
       "name": "Pizza Palace Franchise",
       "ownerId": "user123",
       "isActive": true,

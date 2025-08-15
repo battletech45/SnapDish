@@ -6,7 +6,11 @@ export class ApiError extends Error {
   public statusCode: number;
   public isOperational: boolean;
 
-  constructor(message: string, statusCode: number = 500, isOperational: boolean = true) {
+  constructor(
+    message: string,
+    statusCode: number = 500,
+    isOperational: boolean = true
+  ) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;
@@ -43,7 +47,10 @@ export const errorHandler = (
     } else if (error.name === "TokenExpiredError") {
       statusCode = 401;
       message = "Token expired";
-    } else if (error.name === "MongoError" || error.name === "MongoServerError") {
+    } else if (
+      error.name === "MongoError" ||
+      error.name === "MongoServerError"
+    ) {
       if ((error as any).code === 11000) {
         statusCode = 409;
         message = "Duplicate field value";

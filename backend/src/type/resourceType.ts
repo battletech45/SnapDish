@@ -6,13 +6,11 @@ export type Resource = {
   description?: string;
   unit: ResourceUnit;
   currentStock: number;
-  minimumStock: number; // Alert threshold
-  costPerUnit: number; // Cost per unit for inventory tracking
-  category: string; // e.g., 'beverages', 'ingredients', 'packaging'
-  restaurantId: string; // Which restaurant owns this resource
+  minimumStock: number;
+  costPerUnit: number;
   isActive: boolean;
-  lastRestocked?: Date;
   supplier?: string;
+  lastRestocked?: Date;
   createdAt: Date;
   updatedAt: Date;
 };

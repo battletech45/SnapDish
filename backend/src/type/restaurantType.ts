@@ -1,13 +1,19 @@
 export type Restaurant = {
   id: string;
   name: string;
-  description?: string;
-  address?: string;
-  phoneNumber?: string;
-  email?: string;
+  address: string;
+  phoneNumber: string;
+  email: string;
   imageUrl?: string;
-  ownerId: string; // Reference to admin user who owns this restaurant
+  managerId: string;
+  openingHours: OpeningHour[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type OpeningHour = {
+  day: string;
+  open: string;
+  close: string;
 };

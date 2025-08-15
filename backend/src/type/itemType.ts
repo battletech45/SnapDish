@@ -4,25 +4,35 @@ export type Item = {
   id: string;
   name: string;
   description?: string;
-  price: number;
+  basePrice: number;
   category: string;
   imageUrl?: string;
   isAvailable: boolean;
   isSingleSize: boolean;
-  sizes?: {
-    size: string;
-    price: number;
-  }[];
+  sizes?: Size[];
   isCustomizable: boolean;
-  customizations?: {
-    name: string;
-    price: number;
-  }[];
-  restaurantId: string; // Which restaurant created this item
-  isShared: boolean; // If true, can be used by other restaurants owned by same admin
-  sharedWithRestaurants?: string[]; // Array of restaurant IDs that can use this item
-  // New fields for resource management
-  consumingResources?: ResourceConsumption[]; // Resources consumed when this item is ordered
+  extras?: Extra[];
+  isShared: boolean;
+  consumingResources?: ResourceConsumption[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Size = {
+  id: string;
+  size: string;
+  price: number;
+};
+
+export type Extra = {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  category: string;
+  imageUrl?: string;
+  isActive: boolean;
+  consumingResources?: ResourceConsumption[];
   createdAt: Date;
   updatedAt: Date;
 };

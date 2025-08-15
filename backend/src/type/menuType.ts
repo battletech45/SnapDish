@@ -1,14 +1,29 @@
+import { Item } from "./itemType";
+import { Combo } from "./comboType";
+
 export type Menu = {
   id: string;
   name: string;
   description?: string;
-  restaurantId: string;
   imageUrl?: string;
+  sortOrder: number;
+  items: Item[];
+  combos: Combo[];
+  availableDays?: AvailableDay[];
+  isFranchiseMenu: boolean;
   isActive: boolean;
-  category: string; // e.g., "Lunch", "Dinner", "Breakfast", "All Day"
-  sortOrder: number; // For ordering menus on display
-  itemIds: string[]; // Array of individual item IDs
-  comboIds: string[]; // Array of combo IDs
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type AvailableDay = {
+  day: string;
+  isActive: boolean;
+  discount?: number;
+  availableHours?: AvailableHour[];
+};
+
+export type AvailableHour = {
+  start: string;
+  end: string;
 };

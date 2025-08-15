@@ -2,12 +2,12 @@ export type Combo = {
   id: string;
   name: string;
   description?: string;
-  restaurantId: string;
+  basePrice: number;
   imageUrl?: string;
+  discountPercentage: number;
   isActive: boolean;
-  isCustomizable: boolean;
-  productIds: string[]; // Array of item IDs in this combo
-  discountPercentage?: number; // Optional discount for the combo
+  productIds: string[];
+  validUntil?: Date;
   createdAt: Date;
   updatedAt: Date;
 };
