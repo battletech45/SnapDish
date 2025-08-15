@@ -1,14 +1,29 @@
 export type Menu = {
-  id: string;
   name: string;
   description?: string;
-  restaurantId: string;
-  imageUrl?: string;
+  isFranchiseMenu: boolean;
   isActive: boolean;
-  category: string; // e.g., "Lunch", "Dinner", "Breakfast", "All Day"
-  sortOrder: number; // For ordering menus on display
-  itemIds: string[]; // Array of individual item IDs
-  comboIds: string[]; // Array of combo IDs
+  availableHours?: {
+    start: string;
+    end: string;
+  };
+  itemIds: string[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type LocalMenu = {
+  name: string;
+  description?: string;
+  isLocalMenu: boolean;
+  isActive: boolean;
+  availableHours?: {
+    start: string;
+    end: string;
+  };
+  availableDays?: string[];
+  itemIds: string[];
+  discount?: number;
   createdAt: Date;
   updatedAt: Date;
 };

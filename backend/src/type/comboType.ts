@@ -1,13 +1,14 @@
+import { ResourceConsumption } from "./resourceType";
+
 export type Combo = {
-  id: string;
   name: string;
   description?: string;
-  restaurantId: string;
-  imageUrl?: string;
+  basePrice: number;
+  discount: number;
+  isFranchiseCombo: boolean;
   isActive: boolean;
-  isCustomizable: boolean;
-  productIds: string[]; // Array of item IDs in this combo
-  discountPercentage?: number; // Optional discount for the combo
+  items: ResourceConsumption[];
+  validUntil?: Date;
   createdAt: Date;
   updatedAt: Date;
 };

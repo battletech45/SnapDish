@@ -1,4 +1,4 @@
-export type UserRole = 'admin' | 'user';
+export type UserRole = 'admin' | 'user' | 'manager';
 
 export type User = {
   uid: string;
@@ -8,7 +8,8 @@ export type User = {
   emailVerified?: boolean;
   phoneNumber?: string;
   role: UserRole;
-  ownedRestaurants?: string[]; // Array of restaurant IDs owned by admin
+  ownedFranchises?: string[];
+  managedRestaurants?: string[];
   createdAt: Date;
   updatedAt: Date;
 };
