@@ -5,7 +5,7 @@ const restaurantsCollection = firestore.collection("restaurants");
 
 // Create a new restaurant
 export const createRestaurant = async (
-  restaurant: Omit<Restaurant, "id" | "createdAt" | "updatedAt">
+  restaurant: Restaurant
 ): Promise<Restaurant> => {
   try {
     const now = new Date();
@@ -16,12 +16,7 @@ export const createRestaurant = async (
     };
 
     const docRef = await restaurantsCollection.add(restaurantData);
-    return {
-      id: docRef.id,
-      ...restaurant,
-      createdAt: now,
-      updatedAt: now,
-    };
+    return restaurant;
   } catch (error) {
     console.error("Error creating restaurant:", error);
     throw error;
@@ -38,10 +33,7 @@ export const findRestaurantById = async (
 
     const data = doc.data();
     return {
-      id: doc.id,
-      ...data,
-      createdAt: data?.createdAt?.toDate() || new Date(),
-      updatedAt: data?.updatedAt?.toDate() || new Date(),
+      ...data
     } as Restaurant;
   } catch (error) {
     console.error("Error finding restaurant by ID:", error);
@@ -59,10 +51,7 @@ export const findRestaurantsByOwnerId = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
   } catch (error) {
     console.error("Error finding restaurants by owner ID:", error);
@@ -81,10 +70,7 @@ export const findActiveRestaurantsByOwnerId = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
   } catch (error) {
     console.error("Error finding active restaurants by owner ID:", error);
@@ -103,10 +89,7 @@ export const findRestaurantsByName = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
   } catch (error) {
     console.error("Error finding restaurants by name:", error);
@@ -120,10 +103,7 @@ export const getAllRestaurants = async (): Promise<Restaurant[]> => {
     const snapshot = await restaurantsCollection.get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
   } catch (error) {
     console.error("Error getting all restaurants:", error);
@@ -139,10 +119,7 @@ export const getAllActiveRestaurants = async (): Promise<Restaurant[]> => {
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
   } catch (error) {
     console.error("Error getting all active restaurants:", error);
@@ -153,7 +130,7 @@ export const getAllActiveRestaurants = async (): Promise<Restaurant[]> => {
 // Update restaurant
 export const updateRestaurant = async (
   id: string,
-  updates: Partial<Omit<Restaurant, "id" | "createdAt" | "updatedAt">>
+  updates: Partial<Restaurant>
 ): Promise<Restaurant | null> => {
   try {
     const updateData = {
@@ -204,11 +181,11 @@ export const toggleRestaurantActiveStatus = async (
 // Check if user owns restaurant
 export const isRestaurantOwner = async (
   restaurantId: string,
-  userId: string
+  managerId: string
 ): Promise<boolean> => {
   try {
     const restaurant = await findRestaurantById(restaurantId);
-    return restaurant?.ownerId === userId;
+    return restaurant?.managerId === managerId;
   } catch (error) {
     console.error("Error checking restaurant ownership:", error);
     return false;
@@ -217,11 +194,11 @@ export const isRestaurantOwner = async (
 
 // Get restaurants count by owner
 export const getRestaurantsCountByOwner = async (
-  ownerId: string
+  managerId: string
 ): Promise<number> => {
   try {
     const snapshot = await restaurantsCollection
-      .where("ownerId", "==", ownerId)
+      .where("managerId", "==", managerId)
       .get();
 
     return snapshot.size;
@@ -233,11 +210,11 @@ export const getRestaurantsCountByOwner = async (
 
 // Get active restaurants count by owner
 export const getActiveRestaurantsCountByOwner = async (
-  ownerId: string
+  managerId: string
 ): Promise<number> => {
   try {
     const snapshot = await restaurantsCollection
-      .where("ownerId", "==", ownerId)
+      .where("managerId", "==", managerId)
       .where("isActive", "==", true)
       .get();
 
@@ -275,10 +252,7 @@ export const searchRestaurants = async (
     const snapshot = await query.get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
   } catch (error) {
     console.error("Error searching restaurants:", error);
@@ -289,7 +263,7 @@ export const searchRestaurants = async (
 // Bulk update restaurants (for admin operations)
 export const bulkUpdateRestaurants = async (
   restaurantIds: string[],
-  updates: Partial<Omit<Restaurant, "id" | "createdAt" | "updatedAt">>
+  updates: Partial<Restaurant>
 ): Promise<boolean> => {
   try {
     const batch = firestore.batch();
@@ -313,7 +287,7 @@ export const bulkUpdateRestaurants = async (
 
 // Get restaurants with statistics
 export const getRestaurantsWithStats = async (
-  ownerId?: string
+  managerId?: string
 ): Promise<{
   restaurants: Restaurant[];
   totalCount: number;
@@ -324,16 +298,13 @@ export const getRestaurantsWithStats = async (
     let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> =
       restaurantsCollection;
 
-    if (ownerId) {
-      query = query.where("ownerId", "==", ownerId);
-    }
+    if (managerId) {
+      query = query.where("managerId", "==", managerId);
+    } 
 
     const snapshot = await query.get();
     const restaurants = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Restaurant[];
 
     const totalCount = restaurants.length;

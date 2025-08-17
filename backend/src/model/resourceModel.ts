@@ -6,7 +6,7 @@ const stockHistoryCollection = firestore.collection("resource_stock_history");
 
 // Create a new resource
 export const createResource = async (
-  resource: Omit<Resource, "id" | "createdAt" | "updatedAt">
+  resource: Resource
 ): Promise<Resource> => {
   try {
     const now = new Date();
@@ -17,12 +17,7 @@ export const createResource = async (
     };
 
     const docRef = await resourcesCollection.add(resourceData);
-    return {
-      id: docRef.id,
-      ...resource,
-      createdAt: now,
-      updatedAt: now,
-    };
+    return resource;
   } catch (error) {
     console.error("Error creating resource:", error);
     throw error;
@@ -39,11 +34,7 @@ export const findResourceById = async (
 
     const data = doc.data();
     return {
-      id: doc.id,
-      ...data,
-      lastRestocked: data?.lastRestocked?.toDate(),
-      createdAt: data?.createdAt?.toDate() || new Date(),
-      updatedAt: data?.updatedAt?.toDate() || new Date(),
+      ...data
     } as Resource;
   } catch (error) {
     console.error("Error finding resource by ID:", error);
@@ -62,11 +53,7 @@ export const findResourcesByRestaurantId = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      lastRestocked: doc.data()?.lastRestocked?.toDate(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Resource[];
   } catch (error) {
     console.error("Error finding resources by restaurant ID:", error);
@@ -87,11 +74,7 @@ export const findResourcesByCategory = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      lastRestocked: doc.data()?.lastRestocked?.toDate(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Resource[];
   } catch (error) {
     console.error("Error finding resources by category:", error);
@@ -215,8 +198,7 @@ export const getResourceStockHistory = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      date: doc.data()?.date?.toDate() || new Date(),
+      ...doc.data()
     })) as ResourceStockUpdate[];
   } catch (error) {
     console.error("Error getting resource stock history:", error);

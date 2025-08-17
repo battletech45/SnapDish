@@ -1,8 +1,7 @@
 import { Item } from "../type/itemType";
-import admin from "../service/firebaseService";
+import admin, { firestore } from "../service/firebaseService";
 
-const db = admin.firestore();
-const itemsCollection = db.collection("items");
+const itemsCollection = firestore.collection("items");
 
 export const findItemById = async (id: string): Promise<Item | null> => {
   try {
@@ -11,10 +10,7 @@ export const findItemById = async (id: string): Promise<Item | null> => {
 
     const data = doc.data();
     return {
-      id: doc.id,
-      ...data,
-      createdAt: data?.createdAt?.toDate() || new Date(),
-      updatedAt: data?.updatedAt?.toDate() || new Date(),
+      ...data
     } as Item;
   } catch (error) {
     console.error("Error finding item by ID:", error);
@@ -32,10 +28,7 @@ export const findItemsByCategory = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Item[];
   } catch (error) {
     console.error("Error finding items by category:", error);
@@ -44,7 +37,7 @@ export const findItemsByCategory = async (
 };
 
 export const createItem = async (
-  item: Omit<Item, "id" | "createdAt" | "updatedAt">
+  item: Item
 ): Promise<Item> => {
   try {
     const now = new Date();
@@ -55,12 +48,7 @@ export const createItem = async (
     };
 
     const docRef = await itemsCollection.add(itemData);
-    return {
-      id: docRef.id,
-      ...item,
-      createdAt: now,
-      updatedAt: now,
-    };
+    return item;
   } catch (error) {
     console.error("Error creating item:", error);
     throw error;
@@ -69,7 +57,7 @@ export const createItem = async (
 
 export const updateItem = async (
   id: string,
-  updates: Partial<Omit<Item, "id" | "createdAt" | "updatedAt">>
+  updates: Partial<Item>
 ): Promise<Item | null> => {
   try {
     const updateData = {
@@ -100,10 +88,7 @@ export const getAllItems = async (): Promise<Item[]> => {
     const snapshot = await itemsCollection.get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Item[];
   } catch (error) {
     console.error("Error getting all items:", error);
@@ -121,10 +106,7 @@ export const findItemsByRestaurantId = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Item[];
   } catch (error) {
     console.error("Error finding items by restaurant ID:", error);
@@ -147,10 +129,7 @@ export const findItemsByIds = async (itemIds: string[]): Promise<Item[]> => {
         .get();
 
       const batchItems = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-        updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+        ...doc.data()
       })) as Item[];
 
       items.push(...batchItems);

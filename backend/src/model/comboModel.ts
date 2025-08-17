@@ -10,10 +10,7 @@ export const findComboById = async (id: string): Promise<Combo | null> => {
 
     const data = doc.data();
     return {
-      id: doc.id,
-      ...data,
-      createdAt: data?.createdAt?.toDate() || new Date(),
-      updatedAt: data?.updatedAt?.toDate() || new Date(),
+      ...data
     } as Combo;
   } catch (error) {
     console.error("Error finding combo by ID:", error);
@@ -24,16 +21,13 @@ export const findComboById = async (id: string): Promise<Combo | null> => {
 export const findCombosByRestaurantId = async (
   restaurantId: string
 ): Promise<Combo[]> => {
-  try {
+  try { 
     const snapshot = await combosCollection
       .where("restaurantId", "==", restaurantId)
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Combo[];
   } catch (error) {
     console.error("Error finding combos by restaurant ID:", error);
@@ -51,10 +45,7 @@ export const findActiveCombosByRestaurantId = async (
       .get();
 
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Combo[];
   } catch (error) {
     console.error("Error finding active combos by restaurant ID:", error);
@@ -63,7 +54,7 @@ export const findActiveCombosByRestaurantId = async (
 };
 
 export const createCombo = async (
-  combo: Omit<Combo, "id" | "createdAt" | "updatedAt">
+  combo: Combo
 ): Promise<Combo> => {
   try {
     const now = new Date();
@@ -74,12 +65,7 @@ export const createCombo = async (
     };
 
     const docRef = await combosCollection.add(comboData);
-    return {
-      id: docRef.id,
-      ...combo,
-      createdAt: now,
-      updatedAt: now,
-    };
+    return combo;
   } catch (error) {
     console.error("Error creating combo:", error);
     throw error;
@@ -88,7 +74,7 @@ export const createCombo = async (
 
 export const updateCombo = async (
   id: string,
-  updates: Partial<Omit<Combo, "id" | "createdAt" | "updatedAt">>
+  updates: Partial<Combo>
 ): Promise<Combo | null> => {
   try {
     const updateData = {
@@ -117,12 +103,8 @@ export const deleteCombo = async (id: string): Promise<boolean> => {
 export const getAllCombos = async (): Promise<Combo[]> => {
   try {
     const snapshot = await combosCollection.get();
-
     return snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      createdAt: doc.data()?.createdAt?.toDate() || new Date(),
-      updatedAt: doc.data()?.updatedAt?.toDate() || new Date(),
+      ...doc.data()
     })) as Combo[];
   } catch (error) {
     console.error("Error getting all combos:", error);
