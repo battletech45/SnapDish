@@ -1,10 +1,9 @@
-import { Restaurant } from "../type/restaurantType";
+import { Restaurant, LocalItem, LocalMenu, LocalExtra, ItemPricing, ExtraPricing } from "../type/restaurantType";
 import admin, { firestore } from "../service/firebaseService";
 
-const restaurantsCollection = firestore.collection("restaurants");
-
-// Create a new restaurant
-export const createRestaurant = async (
+// Create a new restaurant under a franchise
+export const createRestaurantUnderFranchise = async (
+  franchiseId: string,
   restaurant: Restaurant
 ): Promise<Restaurant> => {
   try {
@@ -15,121 +14,88 @@ export const createRestaurant = async (
       updatedAt: admin.firestore.Timestamp.fromDate(now),
     };
 
-    const docRef = await restaurantsCollection.add(restaurantData);
-    return restaurant;
+    // Create as subcollection under franchise
+    const docRef = await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
+      .add(restaurantData);
+
+    return restaurantData as unknown as Restaurant;
   } catch (error) {
-    console.error("Error creating restaurant:", error);
+    console.error("Error creating restaurant under franchise:", error);
     throw error;
   }
 };
 
-// Find restaurant by ID
-export const findRestaurantById = async (
-  id: string
+// Find restaurant by ID within a franchise
+export const findRestaurantByIdInFranchise = async (
+  franchiseId: string,
+  restaurantId: string
 ): Promise<Restaurant | null> => {
   try {
-    const doc = await restaurantsCollection.doc(id).get();
+    const doc = await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
+      .doc(restaurantId)
+      .get();
+
     if (!doc.exists) return null;
 
     const data = doc.data();
-    return {
-      ...data
-    } as Restaurant;
+    return data as unknown as Restaurant;
   } catch (error) {
-    console.error("Error finding restaurant by ID:", error);
+    console.error("Error finding restaurant by ID in franchise:", error);
     return null;
   }
 };
 
-// Find restaurants by owner ID
-export const findRestaurantsByOwnerId = async (
-  ownerId: string
+// Find all restaurants in a franchise
+export const findRestaurantsInFranchise = async (
+  franchiseId: string
 ): Promise<Restaurant[]> => {
   try {
-    const snapshot = await restaurantsCollection
-      .where("ownerId", "==", ownerId)
+    const snapshot = await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
       .get();
 
     return snapshot.docs.map((doc) => ({
-      ...doc.data()
+      ...doc.data(),
     })) as Restaurant[];
   } catch (error) {
-    console.error("Error finding restaurants by owner ID:", error);
+    console.error("Error finding restaurants in franchise:", error);
     return [];
   }
 };
 
-// Find active restaurants by owner ID
-export const findActiveRestaurantsByOwnerId = async (
-  ownerId: string
+// Find active restaurants in a franchise
+export const findActiveRestaurantsInFranchise = async (
+  franchiseId: string
 ): Promise<Restaurant[]> => {
   try {
-    const snapshot = await restaurantsCollection
-      .where("ownerId", "==", ownerId)
-      .where("isActive", "==", true)
+    const snapshot = await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
+      .where('isActive', '==', true)
       .get();
 
     return snapshot.docs.map((doc) => ({
-      ...doc.data()
+      ...doc.data(),
     })) as Restaurant[];
   } catch (error) {
-    console.error("Error finding active restaurants by owner ID:", error);
+    console.error("Error finding active restaurants in franchise:", error);
     return [];
   }
 };
 
-// Find restaurants by name (search functionality)
-export const findRestaurantsByName = async (
-  name: string
-): Promise<Restaurant[]> => {
-  try {
-    const snapshot = await restaurantsCollection
-      .where("name", ">=", name)
-      .where("name", "<=", name + "\uf8ff")
-      .get();
-
-    return snapshot.docs.map((doc) => ({
-      ...doc.data()
-    })) as Restaurant[];
-  } catch (error) {
-    console.error("Error finding restaurants by name:", error);
-    return [];
-  }
-};
-
-// Get all restaurants
-export const getAllRestaurants = async (): Promise<Restaurant[]> => {
-  try {
-    const snapshot = await restaurantsCollection.get();
-
-    return snapshot.docs.map((doc) => ({
-      ...doc.data()
-    })) as Restaurant[];
-  } catch (error) {
-    console.error("Error getting all restaurants:", error);
-    return [];
-  }
-};
-
-// Get all active restaurants
-export const getAllActiveRestaurants = async (): Promise<Restaurant[]> => {
-  try {
-    const snapshot = await restaurantsCollection
-      .where("isActive", "==", true)
-      .get();
-
-    return snapshot.docs.map((doc) => ({
-      ...doc.data()
-    })) as Restaurant[];
-  } catch (error) {
-    console.error("Error getting all active restaurants:", error);
-    return [];
-  }
-};
-
-// Update restaurant
-export const updateRestaurant = async (
-  id: string,
+// Update restaurant in franchise
+export const updateRestaurantInFranchise = async (
+  franchiseId: string,
+  restaurantId: string,
   updates: Partial<Restaurant>
 ): Promise<Restaurant | null> => {
   try {
@@ -138,192 +104,95 @@ export const updateRestaurant = async (
       updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
     };
 
-    await restaurantsCollection.doc(id).update(updateData);
-    return findRestaurantById(id);
+    await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
+      .doc(restaurantId)
+      .update(updateData);
+
+    return findRestaurantByIdInFranchise(franchiseId, restaurantId);
   } catch (error) {
-    console.error("Error updating restaurant:", error);
+    console.error("Error updating restaurant in franchise:", error);
     return null;
   }
 };
 
-// Delete restaurant
-export const deleteRestaurant = async (id: string): Promise<boolean> => {
+// Delete restaurant from franchise
+export const deleteRestaurantFromFranchise = async (
+  franchiseId: string,
+  restaurantId: string
+): Promise<boolean> => {
   try {
-    await restaurantsCollection.doc(id).delete();
+    await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
+      .doc(restaurantId)
+      .delete();
     return true;
   } catch (error) {
-    console.error("Error deleting restaurant:", error);
+    console.error("Error deleting restaurant from franchise:", error);
     return false;
   }
 };
 
-// Toggle restaurant active status
-export const toggleRestaurantActiveStatus = async (
-  id: string
+// Toggle restaurant active status in franchise
+export const toggleRestaurantActiveStatusInFranchise = async (
+  franchiseId: string,
+  restaurantId: string
 ): Promise<Restaurant | null> => {
   try {
-    const restaurant = await findRestaurantById(id);
+    const restaurant = await findRestaurantByIdInFranchise(franchiseId, restaurantId);
     if (!restaurant) {
       return null;
     }
 
-    const updatedRestaurant = await updateRestaurant(id, {
+    const updatedRestaurant = await updateRestaurantInFranchise(franchiseId, restaurantId, {
       isActive: !restaurant.isActive,
     });
 
     return updatedRestaurant;
   } catch (error) {
-    console.error("Error toggling restaurant active status:", error);
+    console.error("Error toggling restaurant active status in franchise:", error);
     return null;
   }
 };
 
-// Check if user owns restaurant
-export const isRestaurantOwner = async (
-  restaurantId: string,
-  managerId: string
-): Promise<boolean> => {
-  try {
-    const restaurant = await findRestaurantById(restaurantId);
-    return restaurant?.managerId === managerId;
-  } catch (error) {
-    console.error("Error checking restaurant ownership:", error);
-    return false;
-  }
-};
-
-// Get restaurants count by owner
-export const getRestaurantsCountByOwner = async (
-  managerId: string
+// Get restaurants count in franchise
+export const getRestaurantsCountInFranchise = async (
+  franchiseId: string
 ): Promise<number> => {
   try {
-    const snapshot = await restaurantsCollection
-      .where("managerId", "==", managerId)
+    const snapshot = await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
       .get();
 
     return snapshot.size;
   } catch (error) {
-    console.error("Error getting restaurants count by owner:", error);
+    console.error("Error getting restaurants count in franchise:", error);
     return 0;
   }
 };
 
-// Get active restaurants count by owner
-export const getActiveRestaurantsCountByOwner = async (
-  managerId: string
+// Get active restaurants count in franchise
+export const getActiveRestaurantsCountInFranchise = async (
+  franchiseId: string
 ): Promise<number> => {
   try {
-    const snapshot = await restaurantsCollection
-      .where("managerId", "==", managerId)
-      .where("isActive", "==", true)
+    const snapshot = await firestore
+      .collection('franchises')
+      .doc(franchiseId)
+      .collection('restaurants')
+      .where('isActive', '==', true)
       .get();
 
     return snapshot.size;
   } catch (error) {
-    console.error("Error getting active restaurants count by owner:", error);
+    console.error("Error getting active restaurants count in franchise:", error);
     return 0;
   }
 };
 
-// Search restaurants with pagination
-export const searchRestaurants = async (
-  searchTerm: string,
-  limit: number = 10,
-  offset: number = 0
-): Promise<Restaurant[]> => {
-  try {
-    let query = restaurantsCollection
-      .where("isActive", "==", true)
-      .orderBy("name")
-      .limit(limit)
-      .offset(offset);
-
-    // If search term is provided, filter by name
-    if (searchTerm) {
-      query = restaurantsCollection
-        .where("isActive", "==", true)
-        .where("name", ">=", searchTerm)
-        .where("name", "<=", searchTerm + "\uf8ff")
-        .orderBy("name")
-        .limit(limit)
-        .offset(offset);
-    }
-
-    const snapshot = await query.get();
-
-    return snapshot.docs.map((doc) => ({
-      ...doc.data()
-    })) as Restaurant[];
-  } catch (error) {
-    console.error("Error searching restaurants:", error);
-    return [];
-  }
-};
-
-// Bulk update restaurants (for admin operations)
-export const bulkUpdateRestaurants = async (
-  restaurantIds: string[],
-  updates: Partial<Restaurant>
-): Promise<boolean> => {
-  try {
-    const batch = firestore.batch();
-    const updateData = {
-      ...updates,
-      updatedAt: admin.firestore.Timestamp.fromDate(new Date()),
-    };
-
-    restaurantIds.forEach((id) => {
-      const docRef = restaurantsCollection.doc(id);
-      batch.update(docRef, updateData);
-    });
-
-    await batch.commit();
-    return true;
-  } catch (error) {
-    console.error("Error bulk updating restaurants:", error);
-    return false;
-  }
-};
-
-// Get restaurants with statistics
-export const getRestaurantsWithStats = async (
-  managerId?: string
-): Promise<{
-  restaurants: Restaurant[];
-  totalCount: number;
-  activeCount: number;
-  inactiveCount: number;
-}> => {
-  try {
-    let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> =
-      restaurantsCollection;
-
-    if (managerId) {
-      query = query.where("managerId", "==", managerId);
-    } 
-
-    const snapshot = await query.get();
-    const restaurants = snapshot.docs.map((doc) => ({
-      ...doc.data()
-    })) as Restaurant[];
-
-    const totalCount = restaurants.length;
-    const activeCount = restaurants.filter((r) => r.isActive).length;
-    const inactiveCount = totalCount - activeCount;
-
-    return {
-      restaurants,
-      totalCount,
-      activeCount,
-      inactiveCount,
-    };
-  } catch (error) {
-    console.error("Error getting restaurants with stats:", error);
-    return {
-      restaurants: [],
-      totalCount: 0,
-      activeCount: 0,
-      inactiveCount: 0,
-    };
-  }
-};
