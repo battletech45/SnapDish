@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import admin from "../service/firebaseService";
+import admin, { auth } from "../service/firebaseService";
 import { findUserByUid, createUser } from "../model/userModel";
 import { apiResponse } from "../util/apiResponse";
 
@@ -11,12 +11,12 @@ export const emailLogin = async (req: Request, res: Response) => {
   }
 
   try {
-    const user = await admin.auth().getUserByEmail(email);
+    const user = await auth.getUserByEmail(email);
     if (!user) {
       return apiResponse.notFound(res, "User not found");
     }
 
-    const token = await admin.auth().createCustomToken(user.uid);
+    const token = await auth.createCustomToken(user.uid);
 
     // Log successful login
 
@@ -35,11 +35,11 @@ export const googleLogin = async (req: Request, res: Response) => {
   }
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const decodedToken = await auth.verifyIdToken(idToken);
     const { uid, email, displayName, photoURL, emailVerified, phoneNumber } =
       decodedToken.claims;
 
-    const user = findUserByUid(uid);
+    const user = await findUserByUid(uid);
     if (!user) {
       const now = new Date();
       const newUser = createUser({
@@ -49,7 +49,7 @@ export const googleLogin = async (req: Request, res: Response) => {
         photoURL,
         emailVerified,
         phoneNumber,
-        role: 'user', // Default role for new users
+        role: "user", // Default role for new users
         ownedRestaurants: [], // Empty array for new users
         createdAt: now,
         updatedAt: now,

@@ -42,8 +42,8 @@ export const getItemsByMenuId = async (req: Request, res: Response) => {
 
     // Fetch all items by their IDs
     const items = await Promise.all(
-      menu.itemIds.map(async (itemId) => {
-        return await itemModel.findItemById(itemId);
+      menu.items.map(async (item) => {
+        return await itemModel.findItemById(item.id);
       })
     );
 
@@ -76,8 +76,8 @@ export const getAvailableItemsByMenuId = async (
 
     // Fetch all items by their IDs
     const items = await Promise.all(
-      menu.itemIds.map(async (itemId) => {
-        return await itemModel.findItemById(itemId);
+      menu.items.map(async (item) => {
+        return await itemModel.findItemById(item.id);
       })
     );
 
@@ -126,7 +126,9 @@ export const getItemsByRestaurantId = async (req: Request, res: Response) => {
     const menus = await menuModel.findMenusByRestaurantId(restaurantId);
 
     // Get all unique item IDs from all menus
-    const allItemIds = [...new Set(menus.flatMap((menu) => menu.itemIds))];
+    const allItemIds = [
+      ...new Set(menus.flatMap((menu) => menu.items.map((item) => item.id))),
+    ];
 
     // Fetch all items by their IDs
     const items = await Promise.all(
@@ -298,32 +300,43 @@ export const createItem = async (req: Request, res: Response) => {
   }
 
   try {
-    const itemData: Omit<Item, "id" | "createdAt" | "updatedAt"> = {
+    const itemData: Item = {
+      id: "",
       name,
       description,
-      price: priceNum,
+      basePrice: priceNum,
       category,
       imageUrl,
       isAvailable: isAvailableBool,
       isSingleSize: isSingleSizeBool,
       isCustomizable: isCustomizableBool,
-      restaurantId,
       isShared: isSharedBool,
+      consumingResources: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     // Only add sizes if it's defined and NOT single size
     if (parsedSizes !== undefined && !isSingleSizeBool) {
-      itemData.sizes = parsedSizes;
+      itemData.sizes = parsedSizes.map((size) => ({
+        id: "",
+        size: size.size,
+        price: size.price,
+      }));
     }
 
     // Only add customizations if it's defined and is customizable
     if (parsedCustomizations !== undefined && isCustomizableBool) {
-      itemData.customizations = parsedCustomizations;
-    }
-
-    // Only add sharedWithRestaurants if it's defined and is shared
-    if (parsedSharedWithRestaurants !== undefined && isSharedBool) {
-      itemData.sharedWithRestaurants = parsedSharedWithRestaurants;
+      itemData.extras = parsedCustomizations.map((extra) => ({
+        id: "",
+        name: extra.name,
+        price: extra.price,
+        category: "",
+        isActive: true,
+        consumingResources: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
     }
 
     const newItem = await itemModel.createItem(itemData);
@@ -453,7 +466,7 @@ export const updateItem = async (req: Request, res: Response) => {
 
     if (name !== undefined) updates.name = name;
     if (description !== undefined) updates.description = description;
-    if (price !== undefined) updates.price = parseFloat(price);
+    if (price !== undefined) updates.basePrice = parseFloat(price);
     if (category !== undefined) updates.category = category;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
     if (isAvailableBool !== undefined) updates.isAvailable = isAvailableBool;
@@ -461,11 +474,8 @@ export const updateItem = async (req: Request, res: Response) => {
     if (sizes !== undefined) updates.sizes = sizes;
     if (isCustomizableBool !== undefined)
       updates.isCustomizable = isCustomizableBool;
-    if (customizations !== undefined) updates.customizations = customizations;
-    if (restaurantId !== undefined) updates.restaurantId = restaurantId;
+    if (customizations !== undefined) updates.extras = customizations;
     if (isSharedBool !== undefined) updates.isShared = isSharedBool;
-    if (sharedWithRestaurants !== undefined)
-      updates.sharedWithRestaurants = sharedWithRestaurants;
 
     const updatedItem = await itemModel.updateItem(id, updates);
     if (!updatedItem) {

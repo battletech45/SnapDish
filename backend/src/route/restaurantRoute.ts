@@ -10,12 +10,8 @@ import {
   updateRestaurant,
   deleteRestaurant,
   toggleRestaurantActiveStatus,
-  checkRestaurantOwnership,
   getRestaurantsCountByOwner,
   getActiveRestaurantsCountByOwner,
-  searchRestaurants,
-  getRestaurantsWithStats,
-  bulkUpdateRestaurants,
 } from "../controller/restaurantController";
 
 const router = Router();
@@ -24,26 +20,32 @@ const router = Router();
 router.post("/", createRestaurant);
 
 // GET routes
-router.get("/", getAllRestaurants);
-router.get("/active", getAllActiveRestaurants);
-router.get("/search", searchRestaurants);
-router.get("/stats", getRestaurantsWithStats);
-router.get("/:id", getRestaurantById);
+router.get("/franchise/:franchiseId", getAllRestaurants);
+router.get("/franchise/:franchiseId/active", getAllActiveRestaurants);
+router.get("/franchise/:franchiseId/:id", getRestaurantById);
+
 router.get("/owner/:ownerId", getRestaurantsByOwnerId);
 router.get("/owner/:ownerId/active", getActiveRestaurantsByOwnerId);
-router.get("/owner/:ownerId/count", getRestaurantsCountByOwner);
-router.get("/owner/:ownerId/active-count", getActiveRestaurantsCountByOwner);
+router.get(
+  "/franchise/:franchiseId/owner/:ownerId/count",
+  getRestaurantsCountByOwner
+);
+router.get(
+  "/franchise/:franchiseId/owner/:ownerId/active-count",
+  getActiveRestaurantsCountByOwner
+);
 router.get("/name/:name", getRestaurantsByName);
-router.get("/:restaurantId/owner/:userId", checkRestaurantOwnership);
 
 // PUT routes
-router.put("/:id", updateRestaurant);
-router.put("/bulk", bulkUpdateRestaurants);
+router.put("/franchise/:franchiseId/:id", updateRestaurant);
 
 // PATCH routes
-router.patch("/:id/toggle", toggleRestaurantActiveStatus);
+router.patch(
+  "/franchise/:franchiseId/:id/toggle",
+  toggleRestaurantActiveStatus
+);
 
 // DELETE routes
-router.delete("/:id", deleteRestaurant);
+router.delete("/franchise/:franchiseId/:id", deleteRestaurant);
 
 export default router;

@@ -14,21 +14,21 @@ import {
 
 const router = Router();
 
-// GET routes - use req.params for clean URLs
-router.get("/:id", getComboById);
-router.get("/restaurant/:restaurantId", getCombosByRestaurantId);
-router.get("/restaurant/:restaurantId/active", getActiveCombosByRestaurantId);
+// GET routes
 router.get("/", getAllCombos);
+router.get("/restaurant/:restaurantId/active", getActiveCombosByRestaurantId);
+router.get("/restaurant/:restaurantId", getCombosByRestaurantId);
+router.get("/:id", getComboById);
 
-// POST route - use req.body for form-data
+// POST routes
 router.post("/", createCombo);
 router.post("/:comboId/items", addItemToCombo);
 
-// PUT routes - use req.params for ID, req.body for data
+// PUT/PATCH routes
 router.put("/:id", updateCombo);
 router.patch("/:id/toggle", toggleComboActiveStatus);
 
-// DELETE route - use req.params for ID
+// DELETE routes
 router.delete("/:id", deleteCombo);
 router.delete("/:comboId/items/:itemId", removeItemFromCombo);
 

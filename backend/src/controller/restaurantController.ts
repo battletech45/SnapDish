@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
 import * as restaurantModel from "../model/restaurantModel";
 import { apiResponse } from "../util/apiResponse";
+import { Restaurant } from "../type/restaurantType";
 
 // Create a new restaurant - POST method
 export const createRestaurant = async (req: Request, res: Response) => {
   const {
+    franchiseId,
     name,
     description,
     address,
@@ -47,8 +49,9 @@ export const createRestaurant = async (req: Request, res: Response) => {
       isActive: isActiveBool,
     };
 
-    const newRestaurant = await restaurantModel.createRestaurant(
-      restaurantData
+    const newRestaurant = await restaurantModel.createRestaurantUnderFranchise(
+      franchiseId,
+      restaurantData as unknown as Restaurant
     );
     return apiResponse.created(
       res,
@@ -63,14 +66,17 @@ export const createRestaurant = async (req: Request, res: Response) => {
 
 // Get restaurant by ID - GET method
 export const getRestaurantById = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { franchiseId, id } = req.params;
 
   if (!id) {
     return apiResponse.validationError(res, "Restaurant ID is required");
   }
 
   try {
-    const restaurant = await restaurantModel.findRestaurantById(id);
+    const restaurant = await restaurantModel.findRestaurantByIdInFranchise(
+      franchiseId,
+      id
+    );
     if (!restaurant) {
       return apiResponse.notFound(res, "Restaurant not found");
     }
@@ -95,7 +101,9 @@ export const getRestaurantsByOwnerId = async (req: Request, res: Response) => {
   }
 
   try {
-    const restaurants = await restaurantModel.findRestaurantsByOwnerId(ownerId);
+    const restaurants = await restaurantModel.findRestaurantsInFranchise(
+      ownerId
+    );
     return apiResponse.success(
       res,
       restaurants,
@@ -119,7 +127,7 @@ export const getActiveRestaurantsByOwnerId = async (
   }
 
   try {
-    const restaurants = await restaurantModel.findActiveRestaurantsByOwnerId(
+    const restaurants = await restaurantModel.findActiveRestaurantsInFranchise(
       ownerId
     );
     return apiResponse.success(
@@ -142,7 +150,7 @@ export const getRestaurantsByName = async (req: Request, res: Response) => {
   }
 
   try {
-    const restaurants = await restaurantModel.findRestaurantsByName(name);
+    const restaurants = await restaurantModel.findRestaurantsInFranchise(name);
     return apiResponse.success(
       res,
       restaurants,
@@ -156,8 +164,11 @@ export const getRestaurantsByName = async (req: Request, res: Response) => {
 
 // Get all restaurants - GET method
 export const getAllRestaurants = async (req: Request, res: Response) => {
+  const { franchiseId } = req.params;
   try {
-    const restaurants = await restaurantModel.getAllRestaurants();
+    const restaurants = await restaurantModel.findRestaurantsInFranchise(
+      franchiseId
+    );
     return apiResponse.success(
       res,
       restaurants,
@@ -171,8 +182,11 @@ export const getAllRestaurants = async (req: Request, res: Response) => {
 
 // Get all active restaurants - GET method
 export const getAllActiveRestaurants = async (req: Request, res: Response) => {
+  const { franchiseId } = req.params;
   try {
-    const restaurants = await restaurantModel.getAllActiveRestaurants();
+    const restaurants = await restaurantModel.findActiveRestaurantsInFranchise(
+      franchiseId
+    );
     return apiResponse.success(
       res,
       restaurants,
@@ -186,7 +200,7 @@ export const getAllActiveRestaurants = async (req: Request, res: Response) => {
 
 // Update restaurant - PUT method
 export const updateRestaurant = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { franchiseId, id } = req.params;
   const {
     name,
     description,
@@ -267,7 +281,8 @@ export const updateRestaurant = async (req: Request, res: Response) => {
     if (ownerId !== undefined) updates.ownerId = ownerId;
     if (isActiveBool !== undefined) updates.isActive = isActiveBool;
 
-    const updatedRestaurant = await restaurantModel.updateRestaurant(
+    const updatedRestaurant = await restaurantModel.updateRestaurantInFranchise(
+      franchiseId,
       id,
       updates
     );
@@ -288,14 +303,17 @@ export const updateRestaurant = async (req: Request, res: Response) => {
 
 // Delete restaurant - DELETE method
 export const deleteRestaurant = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { franchiseId, id } = req.params;
 
   if (!id) {
     return apiResponse.validationError(res, "Restaurant ID is required");
   }
 
   try {
-    const deleted = await restaurantModel.deleteRestaurant(id);
+    const deleted = await restaurantModel.deleteRestaurantFromFranchise(
+      franchiseId,
+      id
+    );
     if (!deleted) {
       return apiResponse.notFound(res, "Restaurant not found");
     }
@@ -312,7 +330,7 @@ export const toggleRestaurantActiveStatus = async (
   req: Request,
   res: Response
 ) => {
-  const { id } = req.params;
+  const { franchiseId, id } = req.params;
 
   if (!id) {
     return apiResponse.validationError(res, "Restaurant ID is required");
@@ -320,7 +338,10 @@ export const toggleRestaurantActiveStatus = async (
 
   try {
     const updatedRestaurant =
-      await restaurantModel.toggleRestaurantActiveStatus(id);
+      await restaurantModel.toggleRestaurantActiveStatusInFranchise(
+        franchiseId,
+        id
+      );
     if (!updatedRestaurant) {
       return apiResponse.notFound(res, "Restaurant not found");
     }
@@ -339,49 +360,21 @@ export const toggleRestaurantActiveStatus = async (
   }
 };
 
-// Check if user owns restaurant - GET method
-export const checkRestaurantOwnership = async (req: Request, res: Response) => {
-  const { restaurantId, userId } = req.params;
-
-  if (!restaurantId || !userId) {
-    return apiResponse.validationError(
-      res,
-      "Restaurant ID and User ID are required"
-    );
-  }
-
-  try {
-    const isOwner = await restaurantModel.isRestaurantOwner(
-      restaurantId,
-      userId
-    );
-    return apiResponse.success(
-      res,
-      { isOwner },
-      "Restaurant ownership checked successfully"
-    );
-  } catch (error) {
-    console.error("Error checking restaurant ownership:", error);
-    return apiResponse.internalError(
-      res,
-      "Failed to check restaurant ownership"
-    );
-  }
-};
-
 // Get restaurants count by owner - GET method
 export const getRestaurantsCountByOwner = async (
   req: Request,
   res: Response
 ) => {
-  const { ownerId } = req.params;
+  const { franchiseId, ownerId } = req.params;
 
   if (!ownerId) {
     return apiResponse.validationError(res, "Owner ID is required");
   }
 
   try {
-    const count = await restaurantModel.getRestaurantsCountByOwner(ownerId);
+    const count = await restaurantModel.getRestaurantsCountInFranchise(
+      franchiseId
+    );
     return apiResponse.success(
       res,
       { count },
@@ -398,15 +391,15 @@ export const getActiveRestaurantsCountByOwner = async (
   req: Request,
   res: Response
 ) => {
-  const { ownerId } = req.params;
+  const { franchiseId, ownerId } = req.params;
 
   if (!ownerId) {
     return apiResponse.validationError(res, "Owner ID is required");
   }
 
   try {
-    const count = await restaurantModel.getActiveRestaurantsCountByOwner(
-      ownerId
+    const count = await restaurantModel.getActiveRestaurantsCountInFranchise(
+      franchiseId
     );
     return apiResponse.success(
       res,
@@ -419,99 +412,5 @@ export const getActiveRestaurantsCountByOwner = async (
       res,
       "Failed to get active restaurants count"
     );
-  }
-};
-
-// Search restaurants with pagination - GET method
-export const searchRestaurants = async (req: Request, res: Response) => {
-  const { searchTerm, limit, offset } = req.query;
-
-  // Parse limit and offset
-  const limitNum = limit ? parseInt(limit as string) : 10;
-  const offsetNum = offset ? parseInt(offset as string) : 0;
-
-  if (limitNum < 1 || limitNum > 100) {
-    return apiResponse.validationError(res, "Limit must be between 1 and 100");
-  }
-
-  if (offsetNum < 0) {
-    return apiResponse.validationError(res, "Offset must be non-negative");
-  }
-
-  try {
-    const restaurants = await restaurantModel.searchRestaurants(
-      searchTerm as string,
-      limitNum,
-      offsetNum
-    );
-    return apiResponse.success(
-      res,
-      restaurants,
-      "Restaurants search completed successfully"
-    );
-  } catch (error) {
-    console.error("Error searching restaurants:", error);
-    return apiResponse.internalError(res, "Failed to search restaurants");
-  }
-};
-
-// Get restaurants with statistics - GET method
-export const getRestaurantsWithStats = async (req: Request, res: Response) => {
-  const { ownerId } = req.query;
-
-  try {
-    const stats = await restaurantModel.getRestaurantsWithStats(
-      ownerId as string
-    );
-    return apiResponse.success(
-      res,
-      stats,
-      "Restaurants with statistics retrieved successfully"
-    );
-  } catch (error) {
-    console.error("Error getting restaurants with stats:", error);
-    return apiResponse.internalError(
-      res,
-      "Failed to get restaurants with statistics"
-    );
-  }
-};
-
-// Bulk update restaurants - PUT method
-export const bulkUpdateRestaurants = async (req: Request, res: Response) => {
-  const { restaurantIds, updates } = req.body;
-
-  if (
-    !restaurantIds ||
-    !Array.isArray(restaurantIds) ||
-    restaurantIds.length === 0
-  ) {
-    return apiResponse.validationError(res, "Restaurant IDs array is required");
-  }
-
-  if (!updates || typeof updates !== "object") {
-    return apiResponse.validationError(res, "Updates object is required");
-  }
-
-  try {
-    const success = await restaurantModel.bulkUpdateRestaurants(
-      restaurantIds,
-      updates
-    );
-    if (!success) {
-      return apiResponse.internalError(
-        res,
-        "Failed to bulk update restaurants"
-      );
-    }
-
-    return apiResponse.success(
-      res,
-      null,
-      "Restaurants bulk updated successfully"
-    );
-  } catch (error) {
-    console.error("Error bulk updating restaurants:", error);
-    return apiResponse.internalError(res, "Failed to bulk update restaurants");
   }
 };

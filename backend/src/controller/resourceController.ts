@@ -57,16 +57,17 @@ export const createResourceHandler = async (
     // }
 
     const resource = await createResource({
+      id: "",
       name,
       description,
       unit,
       currentStock: currentStock || 0,
       minimumStock: minimumStock || 0,
       costPerUnit: costPerUnit || 0,
-      category: category || "ingredients",
-      restaurantId,
       isActive: true,
       supplier,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     apiResponse.success(res, resource, "Resource created successfully");
@@ -408,20 +409,6 @@ export const bulkUpdateResourceStockHandler = async (
     const validResources = resources.filter((r) => r !== null);
     if (validResources.length === 0) {
       apiResponse.error(res, "No valid resources found", 404);
-      return;
-    }
-
-    const restaurantId = validResources[0]?.restaurantId;
-    const allSameRestaurant = validResources.every(
-      (r) => r?.restaurantId === restaurantId
-    );
-
-    if (!allSameRestaurant) {
-      apiResponse.error(
-        res,
-        "All resources must belong to the same restaurant",
-        400
-      );
       return;
     }
 

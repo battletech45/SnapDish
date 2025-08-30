@@ -70,7 +70,10 @@ export const getMenusByCategory = async (req: Request, res: Response) => {
   const { restaurantId, category } = req.params;
 
   if (!restaurantId || !category) {
-    return apiResponse.validationError(res, "Restaurant ID and category are required");
+    return apiResponse.validationError(
+      res,
+      "Restaurant ID and category are required"
+    );
   }
 
   try {
@@ -165,7 +168,10 @@ export const createMenu = async (req: Request, res: Response) => {
         }
       } catch (jsonError) {
         if (itemIds.includes(",")) {
-          validatedItemIds = itemIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+          validatedItemIds = itemIds
+            .split(",")
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0);
         } else if (itemIds.trim() !== "") {
           validatedItemIds = [itemIds.trim()];
         }
@@ -196,7 +202,10 @@ export const createMenu = async (req: Request, res: Response) => {
         }
       } catch (jsonError) {
         if (comboIds.includes(",")) {
-          validatedComboIds = comboIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+          validatedComboIds = comboIds
+            .split(",")
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0);
         } else if (comboIds.trim() !== "") {
           validatedComboIds = [comboIds.trim()];
         }
@@ -210,16 +219,39 @@ export const createMenu = async (req: Request, res: Response) => {
   }
 
   try {
-    const menuData: Omit<Menu, "id" | "createdAt" | "updatedAt"> = {
+    const menuData: Menu = {
+      id: "",
       name,
       description,
-      restaurantId,
       imageUrl,
       isActive: isActiveBool,
-      category,
       sortOrder: validatedSortOrder,
-      itemIds: validatedItemIds,
-      comboIds: validatedComboIds,
+      items: validatedItemIds.map((id) => ({
+        id,
+        name: "",
+        basePrice: 0,
+        category: "",
+        isAvailable: true,
+        isSingleSize: false,
+        isCustomizable: false,
+        isShared: false,
+        consumingResources: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+      combos: validatedComboIds.map((id) => ({
+        id,
+        name: "",
+        basePrice: 0,
+        discountPercentage: 0,
+        isActive: true,
+        productIds: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })),
+      isFranchiseMenu: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const newMenu = await menuModel.createMenu(menuData);
@@ -233,8 +265,16 @@ export const createMenu = async (req: Request, res: Response) => {
 // Update a menu - PUT method, use req.params for ID, req.body for data
 export const updateMenu = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, description, imageUrl, isActive, category, sortOrder, itemIds, comboIds } =
-    req.body;
+  const {
+    name,
+    description,
+    imageUrl,
+    isActive,
+    category,
+    sortOrder,
+    itemIds,
+    comboIds,
+  } = req.body;
 
   if (!id) {
     return apiResponse.validationError(res, "Menu ID is required");
@@ -303,7 +343,10 @@ export const updateMenu = async (req: Request, res: Response) => {
         }
       } catch (jsonError) {
         if (itemIds.includes(",")) {
-          validatedItemIds = itemIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+          validatedItemIds = itemIds
+            .split(",")
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0);
         } else if (itemIds.trim() !== "") {
           validatedItemIds = [itemIds.trim()];
         }
@@ -334,7 +377,10 @@ export const updateMenu = async (req: Request, res: Response) => {
         }
       } catch (jsonError) {
         if (comboIds.includes(",")) {
-          validatedComboIds = comboIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+          validatedComboIds = comboIds
+            .split(",")
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0);
         } else if (comboIds.trim() !== "") {
           validatedComboIds = [comboIds.trim()];
         }
@@ -354,10 +400,33 @@ export const updateMenu = async (req: Request, res: Response) => {
     if (description !== undefined) updates.description = description;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
     if (isActiveBool !== undefined) updates.isActive = isActiveBool;
-    if (category !== undefined) updates.category = category;
-    if (validatedSortOrder !== undefined) updates.sortOrder = validatedSortOrder;
-    if (validatedItemIds !== undefined) updates.itemIds = validatedItemIds;
-    if (validatedComboIds !== undefined) updates.comboIds = validatedComboIds;
+    if (validatedSortOrder !== undefined)
+      updates.sortOrder = validatedSortOrder;
+    if (validatedItemIds !== undefined)
+      updates.items = validatedItemIds.map((id) => ({
+        id,
+        name: "",
+        basePrice: 0,
+        category: "",
+        isAvailable: true,
+        isSingleSize: false,
+        isCustomizable: false,
+        isShared: false,
+        consumingResources: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+    if (validatedComboIds !== undefined)
+      updates.combos = validatedComboIds.map((id) => ({
+        id,
+        name: "",
+        basePrice: 0,
+        discountPercentage: 0,
+        isActive: true,
+        productIds: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
 
     const updatedMenu = await menuModel.updateMenu(id, updates);
     if (!updatedMenu) {
@@ -481,7 +550,10 @@ export const addComboToMenu = async (req: Request, res: Response) => {
   const { comboId } = req.body;
 
   if (!menuId || !comboId) {
-    return apiResponse.validationError(res, "Menu ID and Combo ID are required");
+    return apiResponse.validationError(
+      res,
+      "Menu ID and Combo ID are required"
+    );
   }
 
   try {
@@ -506,7 +578,10 @@ export const removeComboFromMenu = async (req: Request, res: Response) => {
   const { menuId, comboId } = req.params;
 
   if (!menuId || !comboId) {
-    return apiResponse.validationError(res, "Menu ID and Combo ID are required");
+    return apiResponse.validationError(
+      res,
+      "Menu ID and Combo ID are required"
+    );
   }
 
   try {

@@ -53,7 +53,9 @@ export const getActiveCombosByRestaurantId = async (
   }
 
   try {
-    const combos = await comboModel.findActiveCombosByRestaurantId(restaurantId);
+    const combos = await comboModel.findActiveCombosByRestaurantId(
+      restaurantId
+    );
     return apiResponse.success(
       res,
       combos,
@@ -69,7 +71,11 @@ export const getActiveCombosByRestaurantId = async (
 export const getAllCombos = async (req: Request, res: Response) => {
   try {
     const combos = await comboModel.getAllCombos();
-    return apiResponse.success(res, combos, "All combos retrieved successfully");
+    return apiResponse.success(
+      res,
+      combos,
+      "All combos retrieved successfully"
+    );
   } catch (error) {
     console.error("Error getting all combos:", error);
     return apiResponse.internalError(res, "Failed to get combos");
@@ -148,7 +154,10 @@ export const createCombo = async (req: Request, res: Response) => {
       } catch (jsonError) {
         // If JSON parsing fails, try comma-separated string
         if (productIds.includes(",")) {
-          validatedProductIds = productIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+          validatedProductIds = productIds
+            .split(",")
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0);
         } else if (productIds.trim() !== "") {
           // Single item
           validatedProductIds = [productIds.trim()];
@@ -176,15 +185,18 @@ export const createCombo = async (req: Request, res: Response) => {
   }
 
   try {
-    const comboData: Omit<Combo, "id" | "createdAt" | "updatedAt"> = {
+    const comboData: Combo = {
+      id: "",
       name,
       description,
-      restaurantId,
+      basePrice: 0,
       imageUrl,
       isActive: isActiveBool,
-      isCustomizable: isCustomizableBool,
       productIds: validatedProductIds,
-      discountPercentage: validatedDiscountPercentage,
+      discountPercentage: validatedDiscountPercentage || 0,
+      validUntil: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     const newCombo = await comboModel.createCombo(comboData);
@@ -198,8 +210,15 @@ export const createCombo = async (req: Request, res: Response) => {
 // Update a combo - PUT method, use req.params for ID, req.body for data
 export const updateCombo = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, description, imageUrl, isActive, isCustomizable, productIds, discountPercentage } =
-    req.body;
+  const {
+    name,
+    description,
+    imageUrl,
+    isActive,
+    isCustomizable,
+    productIds,
+    discountPercentage,
+  } = req.body;
 
   if (!id) {
     return apiResponse.validationError(res, "Combo ID is required");
@@ -269,7 +288,10 @@ export const updateCombo = async (req: Request, res: Response) => {
       } catch (jsonError) {
         // If JSON parsing fails, try comma-separated string
         if (productIds.includes(",")) {
-          validatedProductIds = productIds.split(",").map(id => id.trim()).filter(id => id.length > 0);
+          validatedProductIds = productIds
+            .split(",")
+            .map((id) => id.trim())
+            .filter((id) => id.length > 0);
         } else if (productIds.trim() !== "") {
           // Single item
           validatedProductIds = [productIds.trim()];
@@ -297,14 +319,12 @@ export const updateCombo = async (req: Request, res: Response) => {
   }
 
   try {
-    const updates: Partial<Omit<Combo, "id" | "createdAt" | "updatedAt">> = {};
+    const updates: Partial<Combo> = {};
 
     if (name !== undefined) updates.name = name;
     if (description !== undefined) updates.description = description;
     if (imageUrl !== undefined) updates.imageUrl = imageUrl;
     if (isActiveBool !== undefined) updates.isActive = isActiveBool;
-    if (isCustomizableBool !== undefined)
-      updates.isCustomizable = isCustomizableBool;
     if (validatedProductIds !== undefined)
       updates.productIds = validatedProductIds;
     if (validatedDiscountPercentage !== undefined)
@@ -381,7 +401,10 @@ export const addItemToCombo = async (req: Request, res: Response) => {
   const { itemId } = req.body;
 
   if (!comboId || !itemId) {
-    return apiResponse.validationError(res, "Combo ID and Item ID are required");
+    return apiResponse.validationError(
+      res,
+      "Combo ID and Item ID are required"
+    );
   }
 
   try {
@@ -406,7 +429,10 @@ export const removeItemFromCombo = async (req: Request, res: Response) => {
   const { comboId, itemId } = req.params;
 
   if (!comboId || !itemId) {
-    return apiResponse.validationError(res, "Combo ID and Item ID are required");
+    return apiResponse.validationError(
+      res,
+      "Combo ID and Item ID are required"
+    );
   }
 
   try {
